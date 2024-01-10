@@ -193,5 +193,38 @@ def read_sections():
     # 2. articles라는 키 값으로 article 정보 보내주기
     return jsonify({'result': 'success', 'sections': result}), 200
 
+
+# main에서 분야 추가할 때 사용
+@app.route('/listup', methods=['POST'])
+@jwt_required() #로그인한 유저만이 이 API를 사용할 수 있다는 뜻
+def post_lists():
+
+    current_user = get_jwt_identity()
+    # member = db.members.find_one({"id": current_user})
+
+    # 클라이언트로부터 데이터를 받기
+    intro_receive = request.json['intro_give']  # 클라이언트로부터 intro를 받는 부분
+    genre_receive = request.json['genre_give']
+
+    # 이미 존재하는지 확인
+    if db.lists.find_one({'id': current_user, 'genre': genre_receive}):
+        return jsonify({'result': 'fail', 'msg': '이미 해당 분야에서 소개글을 작성하였습니다.'})
+
+    list = {'id': current_user, 'genre': genre_receive, 'intro': intro_receive}
+
+    # mongoDB에 데이터를 넣기
+    db.lists.insert_one(list)
+
+    return jsonify({'result': 'success'})
+
+@app.route('/listup', methods=['GET'])
+def read_lists():
+    genre_receive = request.args['genre_give']
+
+    # mongoDB에서 조건에 맞는 데이터 조회해오기 (Read)
+    result = list(db.lists.find({'genre': genre_receive}, {'_id': 0}))
+    # 2. articles라는 키 값으로 article 정보 보내주기
+    return jsonify({'result': 'success', 'lists': result})
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
