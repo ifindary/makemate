@@ -2,17 +2,6 @@ from flask import session, redirect, url_for, render_template, request, Blueprin
 
 main = Blueprint('main', __name__)
 
-'''@chat.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        session['user1'] = request.form['user1']
-        session['user2'] = request.form['user2']
-        #session['room'] = request.form['room']
-        session['img'] = request.form['img']    # user2의 이미지
-        
-        return redirect(url_for('chat.chatroom'))
-    return render_template('index.html') '''
-
 @main.route('/moveroom', methods=['GET'])
 def moveroom():
     print('moveroom')
