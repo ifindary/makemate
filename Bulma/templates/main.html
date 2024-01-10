@@ -18,6 +18,7 @@
             showLoginState();
             //loadProfileImg()
             //showUserState();
+            showSection();
         });
         function PostingOpenClose() {
             // id 값 posting-box의 class 중에 is-hidden이 없으면(= 눈에 보이면)
@@ -122,12 +123,117 @@
         //     }
         // };
 
+        function postSection() {
+            //event.preventDefault();  // 폼의 기본 제출 동작 방지
+            var formData = new FormData($("#signup-form")[0]);
+
+            let image = $("#section_image").val().trim();
+            let title = $("#section_title").val().trim();
+
+            if (title.length === 0) {
+                alert("분야 이름을 입력해주세요.");
+                return; // 함수를 여기서 종료하고 더 이상 진행하지 않음
+            }
+
+            let fileInput = document.getElementById('section_image');
+            if (fileInput.files.length === 0) {
+                alert("파일을 업로드해주세요.");
+                return;
+            }
+
+            if (!validateImageFile(fileInput)) {
+                // 이미지 파일이 유효하지 않은 경우 함수 종료
+                var preview = document.getElementById('image-preview');
+                //preview.src = e.target.result;
+                preview.style.display = 'none';
+
+                // 이미지 경로 표시
+                var pathDisplay = document.getElementById('image-path');
+                pathDisplay.textContent = ""; // 경로를 제거.
+                return;
+            }
+
+            // POST 방식으로 분야 생성 요청
+            $.ajax({
+                type: "POST", // POST 방식으로
+                url: "/collect", // /memo라는 url에 요청
+                //data: { image_give : image, title_give: title },
+                data: formData,
+                processData: false,  // processData와 contentType을 false로 설정
+                contentType: false,  // 이렇게 해야 FormData가 올바르게 전송됨
+                success: function (response) { // 성공하면
+                    if (response["result"] == "success") {
+                        alert("추가 성공!")
+                        window.location.reload();
+                    } else { // 실패하면
+                        alert("다시 시도해주세요.")
+                    }
+                }
+            })
+        }
+
+        function showSection() {
+            //cards-box의 내부 html 삭제. addCards 함수로 추가.
+            $("#cards-box").empty()
+
+            $.ajax({
+                type: "GET",
+                url: "/collect",
+                data: {},
+                success: function (response) {
+                    let sections = response["sections"];
+                    console.log(sections);
+                    for (let i = 0; i < sections.length; i++) {
+                        addCards(sections[i]["image"], sections[i]["title"]);
+                    }
+                }
+            })
+        }
+
+        function addCards(image, title) {
+            let temp_html = `<div class="column is-one-third">
+                <div class="card">
+                    <div class="card-image">
+                        <figure class="image is-4by3">
+                            <button type="button" onClick="location.href='list.html'">
+                                <img src="${image}" alt="Placeholder image">
+                            </button>
+                        </figure>
+                    </div>
+                    <p class="card-header-title is-centered">
+                        ${title}
+                    </p>
+                </div>
+            </div>`;
+            $('#cards-box').append(temp_html);
+        }
+        
+        function showImagePreview(event) {
+            var fileInput = event.target;
+            var file = fileInput.files[0];
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                // 이미지 미리보기 업데이트
+                var preview = document.getElementById('image-preview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+
+                // 이미지 경로 표시
+                var pathDisplay = document.getElementById('image-path');
+                pathDisplay.textContent = fileInput.value; // 경로를 표시합니다.
+            };
+
+            // 파일 읽기
+            reader.readAsDataURL(file);
+        }
     </script>
     <style>
         .image-crop {
             width: 60px;
             height: 80px;
             background-image: url('/static/img/defaultimg.PNG');
+
             /* 이미지 경로 설정 */
             background-position: center;
             /* 중앙 정렬 */
@@ -173,18 +279,20 @@
 
 
         <div class="columns is-centered">
-            <form class="box is-hidden" id="posting-box">
+            <form method="post" action="/collect" class="box is-hidden" id="posting-box" enctype="multipart/form-data"
+                onsubmit="return postSection()">
                 <div class="field">
                     <label class="label">분야 이름</label>
                     <div class="control">
-                        <input class="input" type="text" placeholder="이름">
+                        <input class="input" id="section_title" type="text" placeholder="이름" name="section_title">
                     </div>
                 </div>
                 <div class="field">
                     <label class="label">대표 사진</label>
                     <div class="file is-boxed is-large">
                         <label class="file-label">
-                            <input class="file-input" type="file" name="resume">
+                            <input class="file-input" id="section_image" type="file" name="section_image"
+                                onchange="showImagePreview(event)">
                             <span class="file-cta">
                                 <span class="file-label">
                                     사진 업로드
@@ -192,68 +300,17 @@
                             </span>
                         </label>
                     </div>
-                </div>
-                <button class="button is-primary">추가하기</button>
+                    <p id="image-path"></p>
+                    <img id="image-preview" src="" alt="Image Preview"
+                        style="max-width: 200px; max-height: 200px; display: none;">
+                    <button class="button is-primary my-3" onClick="postSection()">추가하기</button>
             </form>
         </div>
+    </div>
 
-        <div class="columns is-multiline is-mobile">
-            <div class="column is-one-third">
-                <div class="card">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='/list'">
-                                <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
-                            </button>
-                        </figure>
-                    </div>
-                    <p class="card-header-title is-centered">
-                        분야 이름
-                    </p>
-                </div>
-            </div>
-            <div class="column is-one-third">
-                <div class="card">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
-                                <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
-                            </button>
-                        </figure>
-                    </div>
-                    <p class="card-header-title is-centered">
-                        분야 이름
-                    </p>
-                </div>
-            </div>
-            <div class="column is-one-third">
-                <div class="card">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
-                                <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
-                            </button>
-                        </figure>
-                    </div>
-                    <p class="card-header-title is-centered">
-                        분야 이름
-                    </p>
-                </div>
-            </div>
-            <div class="column is-one-third">
-                <div class="card">
-                    <div class="card-image">
-                        <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
-                                <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
-                            </button>
-                        </figure>
-                    </div>
-                    <p class="card-header-title is-centered">
-                        분야 이름
-                    </p>
-                </div>
-            </div>
+
+    <div class="container">
+        <div class="columns is-multiline is-mobile" id="cards-box">
             <div class="column is-one-third">
                 <div class="card">
                     <div class="card-image">
@@ -269,6 +326,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </body>
 
 </html>

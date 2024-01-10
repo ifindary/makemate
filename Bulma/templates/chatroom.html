@@ -32,12 +32,12 @@
                     <div class="col">
 
                         <div class="card" style="border-radius: 15px;">
-                            <div class="card-header d-flex justify-content-center align-items-center p-3 bg-info text-white border-bottom-0" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
-                                <p class="mb-0 fw-bold" id="chatroomName">대화 중인 상대방 이름</p>
-                                <input type="hidden" id="chatroomNo">
-                                <button class="delete" onclick="location.href='main.html'"></button>
-                            </div>
-                            
+                            <div class="card">
+                                <header class="card-header d-flex justify-content-center align-items-center p-3 bg-info text-white border-bottom-0" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                                  <p class="card-header-title" id="chatroomName">대화 중인 상대방 이름</p>
+                                  <button class="delete is-medium" onclick="location.href='main.html'"></button>
+                                </header>
+                              </div>
 
                             <div class="card-body">
                                 <div id="msgArea" style="height: 500px; overflow-y: auto;">
