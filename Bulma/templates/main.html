@@ -196,7 +196,7 @@
                 <div class="card">
                     <div class="card-image">
                         <figure class="image is-4by3">
-                            <button type="button" onClick="open_list(this)">
+                            <button type="button" onclick="open_list(this)">
                                 <img src="${image}" alt="Placeholder image">
                             </button>
                         </figure>
@@ -248,6 +248,7 @@
             let text_p = parent_div.querySelector('p');
             alert(text_p.textContent.trim())
             let genre = text_p.textContent.trim();
+
             window.location.href = `/list?genre=${genre}`;
         }
     </script>
