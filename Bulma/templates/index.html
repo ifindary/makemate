@@ -43,7 +43,7 @@
     }
 
     function SignUp() {
-
+      //event.preventDefault();  // 폼의 기본 제출 동작 방지
       var formData = new FormData($("#signup-form")[0]);
 
       let id = $("#id_give").val().trim();
@@ -52,10 +52,12 @@
       let name = $("#name_give").val().trim();
       let file = $("#file_give").val().trim();
 
-      if (file === 0) {
-        alert("사진을 넣어주세요.");
-        return; // 함수를 여기서 종료하고 더 이상 진행하지 않음
+      let fileInput = document.getElementById('file_give');
+      if (fileInput.files.length === 0) {
+        alert("파일을 업로드해주세요.");
+        return;
       }
+
       if (name.length === 0) {
         alert("이름를 입력해주세요.");
         return; // 함수를 여기서 종료하고 더 이상 진행하지 않음
@@ -92,6 +94,7 @@
           }
         }
       })
+      return true
     }
     function Login() {
       let id = $("#login_id_give").val().trim();
@@ -193,7 +196,7 @@
   </div>
 
   <div id="signUp-box" class="container form" style="display:none">
-    <form id="signup-form" enctype="multipart/form-data">
+    <form method="post" action="/memo" id="signup-form" enctype="multipart/form-data" onsubmit="return SignUp()">
       <div class="field">
         <label class="label">프로필 사진</label>
         <div class="file is-boxed is-large">
@@ -246,16 +249,16 @@
           </label>
         </div>
       </div>
-
+    </form>
       <div class="field is-grouped">
         <div class="control">
-          <button class="button is-link" onClick="SignUp()">가입</button>
+          <button class="button is-link" type="button" onClick="SignUp()">가입</button>
         </div>
         <div class="control">
           <button class="button is-link is-light" onClick="LoginOpenClose()">취소</button>
         </div>
       </div>
-    </form>
+    
   </div>
 </body>
 
