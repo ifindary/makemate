@@ -77,8 +77,8 @@
                     }
                 }
             });
-        }        
-        
+        }
+
         // function loadProfileImg() {
         //     // 2. memo에 POST 방식으로 메모 생성 요청하기
         //     console.log("아이디가 뭐냐?" + id)
@@ -209,7 +209,7 @@
             </div>`;
             $('#cards-box').append(temp_html);
         }
-        
+
         function showImagePreview(event) {
             var fileInput = event.target;
             var file = fileInput.files[0];
@@ -252,6 +252,10 @@
 
             window.location.href = `/list?genre=${genre}`;
         }
+
+        function goMain() {
+            window.location.href = '/main';
+        }
     </script>
     <style>
         .image-crop {
@@ -275,7 +279,7 @@
     <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <a class="navbar-item">
-                <h1 class="title" onClick="location.href='main.html'">MakeMate</h1>
+                <h1 class="title" onClick="goMain()">MakeMate</h1>
             </a>
         </div>
 
