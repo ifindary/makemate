@@ -16,13 +16,14 @@
             socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
             socket.on('connect', function(){
                 var user1 = '{{ user1 }}';
-                var user2 = '{{ user2 }}';
+                var genre = '{{ genre }}';
                 var img = '{{ img }}';
+                var room_id = '{{ room_id }}';
                 
-                var your_name = document.getElementById('chatroomName');
-                your_name.innerText = user2;
+                var genre_name = document.getElementById('chatroomName');
+                genre_name.innerText = genre;
 
-                socket.emit('joined', { 'user1': user1, 'user2': user2, 'img': img });
+                socket.emit('joined', { 'user1': user1, 'genre': genre, 'img': img, 'room_id': room_id });
             });
             // 입장했을 때, 채팅방에 있는 모든 사용자에게 발송되는 메세지
             socket.on('status', function(data){
