@@ -134,6 +134,12 @@ def protected():
     member = db.members.find_one({"id": current_user})
     return jsonify({'logged_in_as':current_user, 'img_url' : member['image_path'], 'name' : member['name']}), 200
 
+@app.route('/showimage', methods=['POST'])
+def showimage():
+    genre = request.json.get('genre_give')
+    section = db.sections.find_one({"title": genre})
+    return jsonify({'img_url' : section['image']}), 200
+
 # blocklist 생성. 중복 방지 위해 set 자료형 사용
 jwt_blocklist = set()
 
