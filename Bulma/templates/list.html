@@ -22,7 +22,7 @@
         // 변수의 값을 가져옴
         const genre = params.get('genre');
         //genre = '{{genre}}'
-        alert(genre);
+        //alert(genre);
     });
     
     function open_chatroom(btn){
@@ -44,7 +44,6 @@
           headers: { "Authorization": "Bearer " + token },
           success: function (response) {
               // 사용자가 로그인 상태
-              //id = response["logged_in_as"]
               let user1 = response["logged_in_as"];
               //alert(user1)
 
