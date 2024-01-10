@@ -172,13 +172,13 @@ def post_sections():
         return jsonify({'result': 'fail', 'msg': '이미 존재하는 분야입니다.'})
 
     # 파일명 안전하게 처리
-    filename = secure_filename(image_receive.filename)
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    post_filename = secure_filename(image_receive.filename)
+    post_file_path = os.path.join(app.config['UPLOAD_FOLDER'], post_filename)
 
     # 파일 저장
-    image_receive.save(file_path)
+    image_receive.save(post_file_path)
 
-    section = {'image': file_path, 'title': title_receive}
+    section = {'image': post_file_path, 'title': title_receive}
 
     # mongoDB에 데이터를 넣기
     db.sections.insert_one(section)

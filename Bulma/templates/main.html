@@ -170,6 +170,7 @@
                     }
                 }
             })
+            return true
         }
 
         function showSection() {
@@ -185,7 +186,9 @@
                     console.log(sections);
                     for (let i = 0; i < sections.length; i++) {
                         addCards(sections[i]["image"], sections[i]["title"]);
+                        console.log(sections[i]["image"]);
                     }
+                    
                 }
             })
         }
