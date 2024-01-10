@@ -25,20 +25,7 @@
     </head>
     <body>
         <script>
-            function start_chatting(btn){
-                //해당 btn의 같은 레벨의 자식들 -> 프로필, 한줄소개, 이름
-                //parentNode.childrenNodes 해서 하나씩 변수로 옮긴후
-                //POST
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/main/chat', //예시
-                    data: {'name': , '_id': , 'img': '?'},
-                    success: function(){
-                        console.log("채팅방 생성 성공");
-                    }
-                });
-            }
+            
         </script>
 
         <form action = "http://localhost:5000" method = "POST">
