@@ -61,7 +61,8 @@
                 success: function (response) {
                     // 사용자가 로그인 상태
                     id = response["logged_in_as"]
-                    $("#user_name_box").text(id + " 님 환영합니다.");
+                    name = response["name"]
+                    $("#user_name_box").text(name + " 님 환영합니다.");
                     imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
                     // image-crop 클래스를 가진 요소의 배경 이미지 설정
                     //console.log(imageUrl)

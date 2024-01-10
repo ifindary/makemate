@@ -132,7 +132,7 @@ def login():
 def protected():
     current_user = get_jwt_identity()
     member = db.members.find_one({"id": current_user})
-    return jsonify({'logged_in_as':current_user, 'img_url' : member['image_path']}), 200
+    return jsonify({'logged_in_as':current_user, 'img_url' : member['image_path'], 'name' : member['name']}), 200
 
 # blocklist 생성. 중복 방지 위해 set 자료형 사용
 jwt_blocklist = set()
