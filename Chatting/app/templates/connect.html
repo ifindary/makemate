@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MakeMate</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket;
+        $(document).ready(function(){
+            socket = io.connect('http://' + document.domain + ':' + location.port + '/');
+            socket.on('connect', function(){
+                current_user_id = '{{ current_user_id }}';
+                online_user_list = '{{ online_user_list }}';
+                status = '{{ status }}';
+
+                socket.emit('connect', {'current_user_id' : current_user_id, 'online_user_list' : online_user_list, 'status' : status});
+            });
+        })
+
+
+
+    </script>
