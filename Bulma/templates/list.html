@@ -6,18 +6,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MakeMate | 유저 목록</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="css/mystyles.css">
+    <link rel="stylesheet" href="static/css/mystyles.css">
+    <script>
+      $(document).ready(function(){
+        // URL에서 문자열 추출
+        //const queryString = window.location.search;
+        // 쿼리 문자열 파싱
+        //const params = new URLSearchParams(queryString);
+        // 변수의 값을 가져옴
+        //const genre = params.get('genre');
+        //genre = '{{genre}}'
+        //alert(genre);
+      })
+
+      
+    function open_chatroom(btn){
+      var parentTr = btn.closest('tr');
+
+      var img = parentTr.querySelector('td img').src;
+      var user2 = parentTr.querySelector('td:nth-child(3)').textContent; //user2가 첫 메세지 수신자 / user1은 채팅을 시작한 사람
+
+      
+        let token = localStorage.getItem("access_token");
+        if (!token) {
+          window.location.href = '/';
+        }
+        $.ajax({
+          type: "GET",
+          url: "/protected", // 보호된 라우트
+          headers: { "Authorization": "Bearer " + token },
+          success: function (response) {
+              // 사용자가 로그인 상태
+              id=response["logged_in_as"]
+              let user1 = id;
+              console.log(id)
+
+              $.ajax({
+                type: "POST",
+                url: "/moveroom",
+                data: {'img': img, 'user1': user1, 'user2': user2}
+              });
+          },
+          error: function (xhr, status) {
+              if (xhr.status === 401) {
+                  // 토큰이 만료되었거나 유효하지 않음
+                  alert("로그인이 만료되었습니다.")
+                  logoutUser(); // 로그아웃 처리
+              }
+          }
+        });
+      
+
+    }
+    </script>
   </head>
   <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item">
-            <h1 class="title" onClick="location.href='main.html'">MakeMate</h1>
+            <h1 class="title" onclick="location.href='main.html'">MakeMate</h1>
     </div>
 
     <div class="navbar-end">
         <div class="navbar-item">
-            <a class="button is-light" onClick="location.href='login.html'">
+            <a class="button is-light" onclick="location.href='login.html'">
                 로그아웃
             </a>
         </div>
@@ -43,7 +95,7 @@
                 </td>
                 <td>김정글<strong>(추천)</strong></td>
                 <td>자기소개 데모 텍스트</td>
-                <td><a onClick="location.href='chatroom.html'" title="chatroom">채팅</a></td>
+                <td><a onclick="location.href='/chatroom'" title="chatroom">채팅</a></td>
               </tr>
               <tr>
                 <th>2</th>
@@ -52,7 +104,7 @@
                 </td>
                 <td>이정글</td>
                 <td>자기소개 데모 텍스트</td>
-                <td><a onClick="location.href='chatroom.html'" title="chatroom">채팅</a></td>
+                <td><a onclick="open_chatroom(this)" title="chatroom">채팅</a></td>
               </tr>
               <tr>
                 <th>3</th>
