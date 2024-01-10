@@ -52,7 +52,7 @@
               let user1 = response["logged_in_as"];
               //alert(user1)
 
-              window.location.href = `/moveroom?img=${img}&user1=${user1}&user2=${user2}`;
+              window.location.href = `http://localhost:5005/moveroom?img=${img}&user1=${user1}&user2=${user2}`;
         },
         error: function (xhr, status) {
           if (xhr.status === 401) {
