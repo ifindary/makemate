@@ -132,7 +132,13 @@ def login():
 def protected():
     current_user = get_jwt_identity()
     member = db.members.find_one({"id": current_user})
-    return jsonify({'logged_in_as':current_user, 'img_url' : member['image_path']}), 200
+    return jsonify({'logged_in_as':current_user, 'img_url' : member['image_path'], 'name' : member['name']}), 200
+
+@app.route('/showimage', methods=['POST'])
+def showimage():
+    genre = request.json.get('genre_give')
+    section = db.sections.find_one({"title": genre})
+    return jsonify({'img_url' : section['image']}), 200
 
 # blocklist 생성. 중복 방지 위해 set 자료형 사용
 jwt_blocklist = set()
@@ -193,6 +199,10 @@ def read_sections():
     # 2. articles라는 키 값으로 article 정보 보내주기
     return jsonify({'result': 'success', 'sections': result}), 200
 
+#위 부분을 jinja2로 변경할 수 있음.
+#def sections_route():
+#    sections = list(db.sections.find({}, {'_id': 0}))
+#    return render_template('main.html', sections=sections)
 
 # main에서 분야 추가할 때 사용
 @app.route('/listup', methods=['POST'])
@@ -200,20 +210,22 @@ def read_sections():
 def post_lists():
 
     current_user = get_jwt_identity()
-    # member = db.members.find_one({"id": current_user})
+    member = db.members.find_one({"id": current_user})
 
     # 클라이언트로부터 데이터를 받기
-    intro_receive = request.json['intro_give']  # 클라이언트로부터 intro를 받는 부분
-    genre_receive = request.json['genre_give']
+    intro_receive = request.json.get('intro_give')  # 클라이언트로부터 intro를 받는 부분
+    genre_receive = request.json.get('genre_give')  # Use get method to avoid KeyError
+
+    if not genre_receive:
+        return jsonify({'result': 'fail', 'msg': '분야가 전달되지 않았습니다.'}), 400
 
     # 이미 존재하는지 확인
     if db.lists.find_one({'id': current_user, 'genre': genre_receive}):
         return jsonify({'result': 'fail', 'msg': '이미 해당 분야에서 소개글을 작성하였습니다.'})
-
-    list = {'id': current_user, 'genre': genre_receive, 'intro': intro_receive}
+    list_data = {'id': current_user, 'name': member['name'], 'img_url' : member['image_path'], 'genre': genre_receive, 'intro': intro_receive}
 
     # mongoDB에 데이터를 넣기
-    db.lists.insert_one(list)
+    db.lists.insert_one(list_data)
 
     return jsonify({'result': 'success'})
 
@@ -223,8 +235,17 @@ def read_lists():
 
     # mongoDB에서 조건에 맞는 데이터 조회해오기 (Read)
     result = list(db.lists.find({'genre': genre_receive}, {'_id': 0}))
+
     # 2. articles라는 키 값으로 article 정보 보내주기
     return jsonify({'result': 'success', 'lists': result})
+
+#list 화면에서 사용
+@app.route('/genre_route')
+def genre_route():
+    # genre를 어떻게 가져오는지에 따라 다름
+    # 예: URL에서 쿼리 파라미터로 가져오기
+    genre = request.args.get('genre')
+    return render_template('list.html', genre=genre)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

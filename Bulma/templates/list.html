@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,43 +17,48 @@
     $(document).ready(function () {
       IntroOpenClose();
       showList();
+      showImage()
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
-        // 문서가 로드되면 실행할 코드
-        // URL에서 문자열 추출
-        const queryString = window.location.search;
-        // 쿼리 문자열 파싱
-        const params = new URLSearchParams(queryString);
-        // 변수의 값을 가져옴
-        const genre = params.get('genre');
-        //genre = '{{genre}}'
-        //alert(genre);
+    document.addEventListener('DOMContentLoaded', function () {
+      // 문서가 로드되면 실행할 코드
+      // URL에서 문자열 추출
+      const queryString = window.location.search;
+      // 쿼리 문자열 파싱
+      const params = new URLSearchParams(queryString);
+      // 변수의 값을 가져옴
+      const genre = params.get('genre');
+      //genre = '{{genre}}'
+      //alert(genre);
     });
-    
-    function open_chatroom(btn){
+
+    function open_chatroom(btn) {
       var parentDiv = btn.closest('div');
       var parentImg = btn.closest('.media');
-     
+
       var img = parentImg.querySelector('figure img').src;
       var user2 = parentDiv.querySelector('p:nth-child(1)').textContent; //user2가 첫 메세지 수신자 / user1은 채팅을 시작한 사람
       //alert(user2)
-      
-        let token = localStorage.getItem("access_token");
-        //alert(token)
-        if (!token) {
-          window.location.href = '/';
-        }
-        $.ajax({
-          type: "GET",
-          url: "/protected", // 보호된 라우트
-          headers: { "Authorization": "Bearer " + token },
-          success: function (response) {
-              // 사용자가 로그인 상태
-              let user1 = response["logged_in_as"];
-              //alert(user1)
 
+<<<<<<< HEAD
               window.location.href = `http://localhost:5005/moveroom?img=${img}&user1=${user1}&user2=${user2}`;
+=======
+      let token = localStorage.getItem("access_token");
+      //alert(token)
+      if (!token) {
+        window.location.href = '/';
+      }
+      $.ajax({
+        type: "GET",
+        url: "/protected", // 보호된 라우트
+        headers: { "Authorization": "Bearer " + token },
+        success: function (response) {
+          // 사용자가 로그인 상태
+          let user1 = response["logged_in_as"];
+          //alert(user1)
+
+          window.location.href = `/moveroom?img=${img}&user1=${user1}&user2=${user2}`;
+>>>>>>> 72cefc821dd1058918d14045f0b12f6e249f63bf
         },
         error: function (xhr, status) {
           if (xhr.status === 401) {
@@ -63,7 +69,7 @@
         }
       });
     }
-function logoutUser() {
+    function logoutUser() {
       localStorage.removeItem("access_token"); // 토큰 삭제
       window.location.href = '/'; // 로그인 페이지로 리디렉트
     }
@@ -73,44 +79,60 @@ function logoutUser() {
     }
 
     function logout() {
-            let token = localStorage.getItem("access_token");
-            $.ajax({
-                type: "GET",
-                url: "/logout",
-                headers: { "Authorization": "Bearer " + token },
-                success: function (response) {
-                    alert(response["msg"]);
-                    localStorage.removeItem("access_token"); // 로컬 저장소에서 토큰 삭제
-                    showLoginState();
-                }
-            })
+      let token = localStorage.getItem("access_token");
+      $.ajax({
+        type: "GET",
+        url: "/logout",
+        headers: { "Authorization": "Bearer " + token },
+        success: function (response) {
+          alert(response["msg"]);
+          localStorage.removeItem("access_token"); // 로컬 저장소에서 토큰 삭제
+          showLoginState();
         }
-        function showLoginState() {
-            let token = localStorage.getItem("access_token");
-            if (!token) {
-                window.location.href = '/';
-            }
-            $.ajax({
-                type: "GET",
-                url: "/protected", // 보호된 라우트
-                headers: { "Authorization": "Bearer " + token },
-                success: function (response) {
-                    // 사용자가 로그인 상태
-                   
-                },
-                error: function (xhr, status) {
-                    if (xhr.status === 401) {
-                        // 토큰이 만료되었거나 유효하지 않음
-                        alert("로그인이 만료되었습니다.")
-                        logoutUser(); // 로그아웃 처리
-                    }
-                }
-            });
+      })
+    }
+    function showLoginState() {
+      let token = localStorage.getItem("access_token");
+      if (!token) {
+        window.location.href = '/';
+      }
+      $.ajax({
+        type: "GET",
+        url: "/protected", // 보호된 라우트
+        headers: { "Authorization": "Bearer " + token },
+        success: function (response) {
+          // 사용자가 로그인 상태
+
+        },
+        error: function (xhr, status) {
+          if (xhr.status === 401) {
+            // 토큰이 만료되었거나 유효하지 않음
+            alert("로그인이 만료되었습니다.")
+            logoutUser(); // 로그아웃 처리
+          }
         }
-        function logoutUser() {
-            localStorage.removeItem("access_token"); // 토큰 삭제
-            window.location.href = '/'; // 로그인 페이지로 리디렉트
+      });
+    }
+    function showImage() {
+      const queryString = window.location.search;
+      const params = new URLSearchParams(queryString);
+      const genre = params.get('genre');
+      $.ajax({
+        type: "POST",
+        url: "/showimage", // 보호된 라우트
+        contentType: "application/json",
+        data: JSON.stringify({'genre_give': genre }),
+        success: function (response) {
+          imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
+          console.log(imageUrl+"뭔데")
+          $('.image-crop').css('background-image', 'url(' + imageUrl + ')');
         }
+      });
+    }
+    function logoutUser() {
+      localStorage.removeItem("access_token"); // 토큰 삭제
+      window.location.href = '/'; // 로그인 페이지로 리디렉트
+    }
 
     function postList() {
       event.preventDefault();  // 폼의 기본 제출 동작 방지
@@ -139,25 +161,29 @@ function logoutUser() {
 
       // POST 방식으로 분야 생성 요청
       $.ajax({
-        type: "POST", // POST 방식으로
-        url: "/listup", // /memo라는 url에 요청
-        data: { 'intro_give': intro, 'genre_give': genre },
-        contentType: "application/json",
+        type: "POST",
+        url: "/listup",
+        data: JSON.stringify({ 'intro_give': intro, 'genre_give': genre }),
+        contentType: "application/json",  // Set the content type to JSON
         headers: { "Authorization": "Bearer " + token },
-        success: function (response) { // 성공하면
+        success: function (response) {
           if (response["result"] == "success") {
-            alert("추가 성공!")
+            alert("추가 성공!");
             window.location.reload();
-          } else { // 실패하면
-            alert("다시 시도해주세요.")
+          } else {
+            alert("이미 등록하였습니다.");
           }
+        },
+        error: function (xhr, status) {
+          // Handle errors here
         }
-      })
+      });
+
     }
 
     function showList() {
       //cards-box의 내부 html 삭제. addCards 함수로 추가.
-      //$("#cards-box").empty()
+      $("#cards-box").empty()
 
       // URL에서 문자열 추출
       const queryString = window.location.search;
@@ -180,17 +206,55 @@ function logoutUser() {
           let lists = response["lists"];
           console.log(lists);
           for (let i = 0; i < lists.length; i++) {
-            //addCards(lists[i]["username"], lists[i]["userintro"]);
-            //console.log(lists[i]["image"]);
+            addCards(lists[i]["id"], lists[i]["name"], lists[i]["img_url"], lists[i]["intro"]);
           }
         }
       })
+    }
+
+    function addCards(id, name, img_url, intro) {
+      let temp_html = `<div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="${img_url}" alt="Placeholder image">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4">${name}</p>
+              <p class="subtitle is-6"><a onclick="open_chatroom(this)">이 정글러와 채팅하기</a></p>
+            </div>
+          </div>
+
+          <div class="content">
+            ${intro}
+          </div>
+        </div>
+      </div>`;
+      $('#cards-box').append(temp_html);
     }
 
     function goMain() {
       window.location.href = '/main';
     }
   </script>
+  <style>
+    .image-crop {
+      width: 80px;
+      height: 80px;
+      background-image: url('/static/img/defaultimg.PNG');
+
+      /* 이미지 경로 설정 */
+      background-position: center;
+      /* 중앙 정렬 */
+      background-size: cover;
+      /* 이미지 크기를 div에 맞추되, 비율 유지 */
+      overflow: hidden;
+      /* div 크기를 넘어가는 부분 숨김 */
+      margin: 10px;
+    }
+  </style>
 </head>
 
 <body>
@@ -208,8 +272,9 @@ function logoutUser() {
       </div>
     </div>
   </nav>
-  <div class="container mt-6">
-    <h1 class="title">분야 이름</h1>
+  <div class="container mt-6" style="display: flex; align-items: center;">
+    <div class="image-crop"></div>
+    <h1 class="title" style="margin-left: 15px;">{{ genre }}</h1>
   </div>
   <div class="container mt-6" id="intro-box">
     <h3 class="subtitle is-3">내 소개글 작성</h3>
