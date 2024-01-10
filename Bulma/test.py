@@ -17,7 +17,7 @@ import json #TEST용 지우기
 # 앱 설정
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = "tarzan"
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=10) # 초 단위
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=10) # 초 단위
 jwt = JWTManager(app)
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
