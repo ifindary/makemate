@@ -7,6 +7,49 @@
     <title>MakeMate | 유저 목록</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="static/css/mystyles.css">
+    <script>
+      function open_chatroom(btn){
+        var parentTr = btn.closest('tr');
+  
+        var img = parentTr.querySelector('td img').src;
+        var user2 = parentTr.querySelector('td:nth-child(3)'); //user2가 첫 메세지 수신자 / user1은 채팅을 시작한 사람
+  
+        //var user1 = myname; //////////////////////////수정필요/////////////////////////////////
+        let user1;
+        let token = localStorage.getItem("access_token");
+        if (!token) {
+          window.location.href = '/';
+        }
+        $.ajax({
+          type: "GET",
+          url: "/protected", // 보호된 라우트
+          headers: { "Authorization": "Bearer " + token },
+          success: function (response) {
+              // 사용자가 로그인 상태
+              id=response["logged_in_as"]
+              user1 = id;
+              console.log(id)
+
+              // 성공적으로 id를 받은 경우, 정보를 전달
+              $.ajax({
+                type: "POST",
+                url: "/chat/moveroom",
+                data: {'img': img, 'user1': user1, 'user2': user2},
+        
+              });
+          },
+          error: function (xhr, status) {
+              if (xhr.status === 401) {
+                  // 토큰이 만료되었거나 유효하지 않음
+                  alert("로그인이 만료되었습니다.")
+                  logoutUser(); // 로그아웃 처리
+              }
+          }
+      });
+        
+  
+      }
+      </script>
   </head>
   <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
