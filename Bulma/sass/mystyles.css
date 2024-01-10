@@ -1571,7 +1571,7 @@ table th {
 /* Bulma Form */
 .select select, .textarea, .input {
   background-color: hsl(0, 0%, 100%);
-  border-color: transparent;
+  border-color: hsl(0, 0%, 86%);
   border-radius: 4px;
   color: hsl(0, 0%, 21%);
 }
