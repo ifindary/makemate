@@ -47,14 +47,12 @@
                     showLoginState();
                 }
             })
-            //alert("로그아웃 되었습니다.");
-            localStorage.removeItem("access_token"); // 로컬 저장소에서 토큰 삭제
-            showLoginState();
         }
         function showLoginState() {
             let token = localStorage.getItem("access_token");
             if (!token) {
                 window.location.href = '/';
+                return;
             }
             $.ajax({
                 type: "GET",

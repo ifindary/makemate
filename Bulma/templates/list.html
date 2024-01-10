@@ -13,6 +13,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/mystyles.css">
   <script>
+    $(document).ready(function () {
+            showLoginState();
+        });
     function open_chatroom(btn) {
       var parentTr = btn.closest('tr');
 
@@ -24,6 +27,7 @@
       let token = localStorage.getItem("access_token");
       if (!token) {
         window.location.href = '/';
+        return;
       }
       $.ajax({
         type: "GET",
@@ -74,9 +78,32 @@
                     showLoginState();
                 }
             })
-            //alert("로그아웃 되었습니다.");
-            localStorage.removeItem("access_token"); // 로컬 저장소에서 토큰 삭제
-            showLoginState();
+        }
+        function showLoginState() {
+            let token = localStorage.getItem("access_token");
+            if (!token) {
+                window.location.href = '/';
+            }
+            $.ajax({
+                type: "GET",
+                url: "/protected", // 보호된 라우트
+                headers: { "Authorization": "Bearer " + token },
+                success: function (response) {
+                    // 사용자가 로그인 상태
+                   
+                },
+                error: function (xhr, status) {
+                    if (xhr.status === 401) {
+                        // 토큰이 만료되었거나 유효하지 않음
+                        alert("로그인이 만료되었습니다.")
+                        logoutUser(); // 로그아웃 처리
+                    }
+                }
+            });
+        }
+        function logoutUser() {
+            localStorage.removeItem("access_token"); // 토큰 삭제
+            window.location.href = '/'; // 로그인 페이지로 리디렉트
         }
   </script>
 </head>
