@@ -7,7 +7,9 @@ from pymongo import MongoClient
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from flask_jwt_extended import get_jwt
+from werkzeug.utils import secure_filename
 import requests # TEST용 지우기
+import os
 import json #TEST용 지우기 
 
 
@@ -19,6 +21,13 @@ jwt = JWTManager(app)
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
 db = client.dbsignuptest  # 'dbjungle'라는 이름의 db를 만들거나 사용합니다.
+
+# 이미지를 저장할 경로 설정
+UPLOAD_FOLDER = 'image'#여기에 웹서버 경로 설정
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 
 @app.route('/')
@@ -41,6 +50,7 @@ def signup():
     pw_receive = request.form['pw_give']  # 클라이언트로부터 comment를 받는 부분
     pw_check_receive = request.form['pw_check_give']  # 클라이언트로부터 comment를 받는 부분
     name_receive = request.form['name_give']  # 클라이언트로부터 comment를 받는 부분
+    file_receive = request.files['file_give']  # 이미지 파일 받기
     
     # ID가 이미 존재하는지 확인
     if db.members.find_one({'id': id_receive}):
@@ -48,10 +58,17 @@ def signup():
     if pw_receive!=pw_check_receive:
         return jsonify({'result': 'fail', 'msg': '비밀번호가 일치하지 않습니다.'})
 
+    # 파일명 안전하게 처리
+    filename = secure_filename(file_receive.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    # 파일 저장
+    file_receive.save(file_path)
+    
     # 비밀번호 해시 생성
     pw_hash = generate_password_hash(pw_receive)
 
-    member = {'id': id_receive, 'pw': pw_hash, 'name': name_receive}
+    member = {'id': id_receive, 'pw': pw_hash, 'name': name_receive,"image_path": file_path}
 
     # 3. mongoDB에 데이터를 넣기
     db.members.insert_one(member)
