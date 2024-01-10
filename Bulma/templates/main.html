@@ -13,9 +13,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="static/css/mystyles.css">
     <script>
+        //let id
         $(document).ready(function () {
             showLoginState();
+            //loadProfileImg()
             //showUserState();
+            showSection();
         });
         function PostingOpenClose() {
             // id 값 posting-box의 class 중에 is-hidden이 없으면(= 눈에 보이면)
@@ -44,14 +47,12 @@
                     showLoginState();
                 }
             })
-            //alert("로그아웃 되었습니다.");
-            localStorage.removeItem("access_token"); // 로컬 저장소에서 토큰 삭제
-            showLoginState();
         }
         function showLoginState() {
             let token = localStorage.getItem("access_token");
             if (!token) {
                 window.location.href = '/';
+                return;
             }
             $.ajax({
                 type: "GET",
@@ -60,7 +61,12 @@
                 success: function (response) {
                     // 사용자가 로그인 상태
                     id = response["logged_in_as"]
-                    $("#user_name_box").text(id+" 님 환영합니다.");
+                    $("#user_name_box").text(id + " 님 환영합니다.");
+                    imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
+                    // image-crop 클래스를 가진 요소의 배경 이미지 설정
+                    //console.log(imageUrl)
+                    $('.image-crop').css('background-image', 'url(' + imageUrl + ')');
+                    //static안해도 찾아감?
 
                 },
                 error: function (xhr, status) {
@@ -71,7 +77,27 @@
                     }
                 }
             });
-        }
+        }        
+        // function loadProfileImg() {
+        //     // 2. memo에 POST 방식으로 메모 생성 요청하기
+        //     console.log("아이디가 뭐냐?" + id)
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/loadprofileimg",
+        //         contentType: "application/json",
+        //         data: JSON.stringify({ id_give: id }),
+        //         success: function (response) {
+        //             if (response["result"] == "success") {
+        //                 let imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
+        //                 // image-crop 클래스를 가진 요소의 배경 이미지 설정
+        //                 $('.image-crop').css('background-image', 'url(' + '/static/' + imageUrl + ')');
+        //             }
+        //             else {
+        //                 alert("서버 오류!")
+        //             }
+        //         }
+        //     })
+        // }
 
         function logoutUser() {
             localStorage.removeItem("access_token"); // 토큰 삭제
@@ -135,27 +161,30 @@
                 contentType: false,  // 이렇게 해야 FormData가 올바르게 전송됨
                 success: function (response) { // 성공하면
                     if (response["result"] == "success") {
-                        alert("추가 성공!")
+                        alert(response["msg"]);
                         window.location.reload();
                     } else { // 실패하면
                         alert("다시 시도해주세요.")
                     }
                 }
             })
+            return true
         }
+
         function showSection() {
             //cards-box의 내부 html 삭제. addCards 함수로 추가.
             $("#cards-box").empty()
 
             $.ajax({
                 type: "GET",
-                url: "/collect",
+                url: "/collectread",
                 data: {},
                 success: function (response) {
                     let sections = response["sections"];
-                    console.log(sections);
+                    //console.log(sections);
                     for (let i = 0; i < sections.length; i++) {
                         addCards(sections[i]["image"], sections[i]["title"]);
+                        //console.log(sections[i]["image"]);
                     }
                 }
             })
@@ -166,7 +195,7 @@
                 <div class="card">
                     <div class="card-image">
                         <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
+                            <button type="button" onclick="open_list(this)">
                                 <img src="${image}" alt="Placeholder image">
                             </button>
                         </figure>
@@ -199,6 +228,19 @@
             reader.readAsDataURL(file);
         }
 
+        function validateImageFile(fileInput) {
+            var file = fileInput.files[0];
+            var validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'];
+
+            if (file && validImageTypes.includes(file.type)) {
+                return true;
+            } else {
+                alert("유효한 이미지 파일을 업로드해주세요. (jpg, jpeg, png, gif)");
+                fileInput.value = ''; // 파일 입력 필드 초기화
+                return false;
+            }
+        }
+
         function open_list(btn){
             var parent_div = btn.closest('div');
             parent_div = parent_div.parentNode;
@@ -207,23 +249,14 @@
             let genre = text_p.textContent.trim();
 
             window.location.href = `/list?genre=${genre}`;
-
-            //$.ajax({
-            //    type: 'POST',
-            //    url: "/list",
-            //    data: { genre: genre },
-                //success: function(response){
-                //    alert(response)
-                //    window.location.href = '/list';
-                //}
-            //})
         }
     </script>
     <style>
         .image-crop {
             width: 60px;
             height: 80px;
-            background-image: url('image/mongodb.png');
+            background-image: url('/static/img/defaultimg.PNG');
+
             /* 이미지 경로 설정 */
             background-position: center;
             /* 중앙 정렬 */
@@ -270,18 +303,20 @@
 
 
         <div class="columns is-centered">
-            <form class="box is-hidden" id="posting-box">
+            <form method="post" action="/collect" id="posting-box" class="box is-hidden" enctype="multipart/form-data"
+                onsubmit="return postSection()">
                 <div class="field">
                     <label class="label">분야 이름</label>
                     <div class="control">
-                        <input class="input" type="text" placeholder="이름">
+                        <input class="input" id="section_title" type="text" placeholder="이름" name="section_title">
                     </div>
                 </div>
                 <div class="field">
                     <label class="label">대표 사진</label>
                     <div class="file is-boxed is-large">
                         <label class="file-label">
-                            <input class="file-input" type="file" name="resume">
+                            <input class="file-input" id="section_image" type="file" name="section_image"
+                                onchange="showImagePreview(event)">
                             <span class="file-cta">
                                 <span class="file-label">
                                     사진 업로드
@@ -289,13 +324,15 @@
                             </span>
                         </label>
                     </div>
-                </div>
-                <p id="image-path"></p>
+                    <p id="image-path"></p>
                     <img id="image-preview" src="" alt="Image Preview"
                         style="max-width: 200px; max-height: 200px; display: none;">
-                    <button class="button is-primary my-3" onClick="postSection()">추가하기</button>
             </form>
+            <button class="button is-primary my-3" type="button" onClick="postSection()">추가하기</button>
+
         </div>
+    </div>
+
 
         <div class="container">
             <div class="columns is-multiline is-mobile" id="cards-box">
@@ -309,7 +346,7 @@
                             </figure>
                         </div>
                         <p class="card-header-title is-centered">
-                            movie
+                            분야 이름
                         </p>
                     </div>
                 </div>
