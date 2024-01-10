@@ -219,12 +219,8 @@
             </div>
             <div class="media-content">
               <p class="title is-4">${name}</p>
-              <p class="subtitle is-6"><a onclick="open_chatroom(this)">이 정글러와 채팅하기</a></p>
+              <p class="subtitle is-6">${intro}</p>
             </div>
-          </div>
-
-          <div class="content">
-            ${intro}
           </div>
         </div>
       </div>`;
@@ -268,9 +264,22 @@
       </div>
     </div>
   </nav>
-  <div class="container mt-6" style="display: flex; align-items: center;">
-    <div class="image-crop"></div>
-    <h1 class="title" style="margin-left: 15px;">{{ genre }}</h1>
+  <div class="container is-primary mt-6" style="display: flex; align-items: center;">
+    <div class="card">
+      <div class="card-content">
+        <div class="media">
+          <div class="media-left">
+            <figure class="image is-48x48">
+              <div class="image-crop"></div>
+            </figure>
+          </div>
+          <div class="media-content">
+            <p class="title is-4">{{ genre }}</p>
+            <p class="subtitle is-6"><a onclick="open_chatroom(this)">다 같이 채팅하기</a><span class="tag is-success mb-1 ml-1">추천</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="container mt-6" id="intro-box">
     <h3 class="subtitle is-3">내 소개글 작성</h3>
