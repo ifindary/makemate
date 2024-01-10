@@ -60,7 +60,7 @@
                 success: function (response) {
                     // 사용자가 로그인 상태
                     id = response["logged_in_as"]
-                    $("#user_name_box").text(id+" 님 환영합니다.");
+                    $("#user_name_box").text(id + " 님 환영합니다.");
 
                 },
                 error: function (xhr, status) {
@@ -96,6 +96,17 @@
         // };
 
     </script>
+    <style>
+        .image-crop {
+            width: 60px;
+            height: 80px;
+            background-image: url('/static/img.png'); /* 이미지 경로 설정 */
+            background-position: center; /* 중앙 정렬 */
+            background-size: cover; /* 이미지 크기를 div에 맞추되, 비율 유지 */
+            overflow: hidden; /* div 크기를 넘어가는 부분 숨김 */
+            margin: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -105,9 +116,9 @@
                 <h1 class="title" onClick="location.href='main.html'">MakeMate</h1>
             </a>
         </div>
-
-
+        
         <div class="navbar-end">
+            <div class="image-crop"></div>
             <div id="user_name_box" class="navbar-item" style="float:right;">
                 님 환영합니다.
             </div>
