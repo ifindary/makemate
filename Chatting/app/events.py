@@ -42,6 +42,7 @@ def socketio_init(socketio):
                 break;
         
         join_room(room)
+        session['room'] = room
         
         data = {
             'room_id': room,
