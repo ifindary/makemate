@@ -164,7 +164,7 @@
                 success: function (response) { // 성공하면
                     if (response["result"] == "success") {
                         alert(response["msg"]);
-                        //window.location.href = '/main';
+                        window.location.reload();
                     } else { // 실패하면
                         alert("다시 시도해주세요.")
                     }
