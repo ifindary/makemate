@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="static/css/mystyles.css">
     <script>
+        //let id
         $(document).ready(function () {
             showLoginState();
+            //loadProfileImg()
             //showUserState();
         });
         function PostingOpenClose() {
@@ -61,6 +63,11 @@
                     // 사용자가 로그인 상태
                     id = response["logged_in_as"]
                     $("#user_name_box").text(id + " 님 환영합니다.");
+                    imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
+                    // image-crop 클래스를 가진 요소의 배경 이미지 설정
+                    console.log(imageUrl)
+                    $('.image-crop').css('background-image', 'url('+ imageUrl + ')');
+                    //static안해도 찾아감?
 
                 },
                 error: function (xhr, status) {
@@ -72,6 +79,26 @@
                 }
             });
         }
+        // function loadProfileImg() {
+        //     // 2. memo에 POST 방식으로 메모 생성 요청하기
+        //     console.log("아이디가 뭐냐?" + id)
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/loadprofileimg",
+        //         contentType: "application/json",
+        //         data: JSON.stringify({ id_give: id }),
+        //         success: function (response) {
+        //             if (response["result"] == "success") {
+        //                 let imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
+        //                 // image-crop 클래스를 가진 요소의 배경 이미지 설정
+        //                 $('.image-crop').css('background-image', 'url(' + '/static/' + imageUrl + ')');
+        //             }
+        //             else {
+        //                 alert("서버 오류!")
+        //             }
+        //         }
+        //     })
+        // }
 
         function logoutUser() {
             localStorage.removeItem("access_token"); // 토큰 삭제
@@ -100,10 +127,14 @@
         .image-crop {
             width: 60px;
             height: 80px;
-            background-image: url('/static/img.png'); /* 이미지 경로 설정 */
-            background-position: center; /* 중앙 정렬 */
-            background-size: cover; /* 이미지 크기를 div에 맞추되, 비율 유지 */
-            overflow: hidden; /* div 크기를 넘어가는 부분 숨김 */
+            background-image: url('/static/img/defaultimg.PNG');
+            /* 이미지 경로 설정 */
+            background-position: center;
+            /* 중앙 정렬 */
+            background-size: cover;
+            /* 이미지 크기를 div에 맞추되, 비율 유지 */
+            overflow: hidden;
+            /* div 크기를 넘어가는 부분 숨김 */
             margin: 10px;
         }
     </style>
@@ -116,7 +147,7 @@
                 <h1 class="title" onClick="location.href='main.html'">MakeMate</h1>
             </a>
         </div>
-        
+
         <div class="navbar-end">
             <div class="image-crop"></div>
             <div id="user_name_box" class="navbar-item" style="float:right;">
@@ -171,7 +202,7 @@
                 <div class="card">
                     <div class="card-image">
                         <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
+                            <button type="button" onClick="location.href='/list'">
                                 <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
                             </button>
                         </figure>
