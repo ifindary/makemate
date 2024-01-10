@@ -131,6 +131,25 @@
         }
       })
     }
+    function showImagePreview(event) {
+    var fileInput = event.target;
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+        // 이미지 미리보기 업데이트
+        var preview = document.getElementById('image-preview');
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+
+        // 이미지 경로 표시
+        var pathDisplay = document.getElementById('image-path');
+        pathDisplay.textContent = fileInput.value; // 경로를 표시합니다.
+    };
+
+    // 파일 읽기
+    reader.readAsDataURL(file);
+}
 
     function showLoginState() {
       // let loginid = ""
@@ -201,7 +220,7 @@
         <label class="label">프로필 사진</label>
         <div class="file is-boxed is-large">
           <label class="file-label">
-            <input id="file_give" class="file-input" type="file" name="file_give">
+            <input id="file_give" class="file-input" type="file" name="file_give" onchange="showImagePreview(event)">
             <span class="file-cta">
               <span class="file-label">
                 사진 업로드
@@ -209,7 +228,10 @@
             </span>
           </label>
         </div>
+        <p id="image-path"></p>  <!-- 이미지 경로 표시 -->
+            <img id="image-preview" src="" alt="Image Preview" style="max-width: 200px; max-height: 200px; display: none;"> <!-- 이미지 미리보기 -->
       </div>
+      
 
       <div class="field">
         <label class="label">이름</label>
