@@ -212,7 +212,7 @@ def post_lists():
     # 이미 존재하는지 확인
     if db.lists.find_one({'id': current_user, 'genre': genre_receive}):
         return jsonify({'result': 'fail', 'msg': '이미 해당 분야에서 소개글을 작성하였습니다.'})
-    list_data = {'id': current_user, 'img_url' : member['image_path'], 'genre': genre_receive, 'intro': intro_receive}
+    list_data = {'id': current_user, 'name': member['name'], 'img_url' : member['image_path'], 'genre': genre_receive, 'intro': intro_receive}
 
     # mongoDB에 데이터를 넣기
     db.lists.insert_one(list_data)
@@ -225,8 +225,17 @@ def read_lists():
 
     # mongoDB에서 조건에 맞는 데이터 조회해오기 (Read)
     result = list(db.lists.find({'genre': genre_receive}, {'_id': 0}))
+
     # 2. articles라는 키 값으로 article 정보 보내주기
     return jsonify({'result': 'success', 'lists': result})
+
+#list 화면에서 사용
+@app.route('/genre_route')
+def genre_route():
+    # genre를 어떻게 가져오는지에 따라 다름
+    # 예: URL에서 쿼리 파라미터로 가져오기
+    genre = request.args.get('genre')
+    return render_template('your_template.html', genre=genre)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

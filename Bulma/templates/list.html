@@ -185,13 +185,13 @@
           let lists = response["lists"];
           console.log(lists);
           for (let i = 0; i < lists.length; i++) {
-            addCards(lists[i]["id"], lists[i]["img_url"], lists[i]["genre"], lists[i]["intro"]);
+            addCards(lists[i]["id"], lists[i]["name"], lists[i]["img_url"], lists[i]["intro"]);
           }
         }
       })
     }
 
-    function addCards(id, img_url, genre, intro) {
+    function addCards(id, name, img_url, intro) {
       let temp_html = `<div class="card">
         <div class="card-content">
           <div class="media">
@@ -201,7 +201,7 @@
               </figure>
             </div>
             <div class="media-content">
-              <p class="title is-4">${id}</p>
+              <p class="title is-4">${name}</p>
               <p class="subtitle is-6"><a onclick="open_chatroom(this)">이 정글러와 채팅하기</a></p>
             </div>
           </div>
@@ -236,7 +236,7 @@
     </div>
   </nav>
   <div class="container mt-6">
-    <h1 class="title">분야 이름</h1>
+    <h1 class="title">{{ genre }}</h1>
   </div>
   <div class="container mt-6" id="intro-box">
     <h3 class="subtitle is-3">내 소개글 작성</h3>
