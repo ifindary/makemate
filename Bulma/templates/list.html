@@ -74,9 +74,24 @@
         $("#intro-box").addClass("is-hidden");
       }
     }
+    function logout() {
+      let token = localStorage.getItem("access_token");
+      $.ajax({
+          type: "GET",
+          url: "/logout",
+          headers: { "Authorization": "Bearer " + token },
+          success: function (response) {
+              alert(response["msg"]);
+              localStorage.removeItem("access_token"); // 로컬 저장소에서 토큰 삭제
+              showLoginState();
+          }
+      })
+      //alert("로그아웃 되었습니다.");
+      localStorage.removeItem("access_token"); // 로컬 저장소에서 토큰 삭제
+      showLoginState();
+  }
     </script>
-  </head>  
-
+  </head> 
 <body>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
@@ -86,7 +101,7 @@
 
     <div class="navbar-end">
       <div class="navbar-item">
-        <a class="button is-light" onClick="location.href='login.html'">
+        <a class="button is-light" onClick=logout()>
           로그아웃
         </a>
       </div>
