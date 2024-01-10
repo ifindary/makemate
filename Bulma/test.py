@@ -24,7 +24,7 @@ client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑
 db = client.dbsignuptest  # 'dbjungle'라는 이름의 db를 만들거나 사용합니다.
 
 # 이미지를 저장할 경로 설정
-UPLOAD_FOLDER = 'image'#여기에 웹서버 경로 설정
+UPLOAD_FOLDER = 'static'#여기에 웹서버 경로 설정
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 if not os.path.exists(UPLOAD_FOLDER):
@@ -42,6 +42,14 @@ def movemain():
 @app.route('/index')
 def moveindex():
     return render_template('index.html')
+
+@app.route('/list')
+def movelist():
+    return render_template('list.html')
+
+@app.route('/chatroom')
+def movechatroom():
+    return render_template('chatroom.html')
 
 
 @app.route('/memo', methods=['POST'])
@@ -107,12 +115,22 @@ def login():
         return jsonify({'result': 'success', 'msg': '로그인 성공','access_token': access_token}), 200
     else:
         return jsonify({'result': 'fail', 'msg': '로그인 실패'}), 200 #401에서 200 으로 변경하고
+    
+# @app.route('/loadprofileimg', methods=['POST'])
+# def loadprofileimg():
+    
+#     id = request.json.get('id_give')
+    
+#     # MongoDB에서 사용자 검색
+#     member = db.members.find_one({"id": id})
+#     return jsonify({'result': 'success','img_url': member['image_path']}), 200 
 
 @app.route('/protected', methods=['GET'])
 @jwt_required() #로그인한 유저만이 이 API를 사용할 수 있다는 뜻
 def protected():
     current_user = get_jwt_identity()
-    return jsonify({'logged_in_as':current_user}), 200
+    member = db.members.find_one({"id": current_user})
+    return jsonify({'logged_in_as':current_user, 'img_url' : member['image_path']}), 200
 
 # blocklist 생성. 중복 방지 위해 set 자료형 사용
 jwt_blocklist = set()
