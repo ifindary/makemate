@@ -17,9 +17,10 @@
     $(document).ready(function () {
       IntroOpenClose();
       showList();
+      showImage()
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       // 문서가 로드되면 실행할 코드
       // URL에서 문자열 추출
       const queryString = window.location.search;
@@ -27,11 +28,11 @@
       const params = new URLSearchParams(queryString);
       // 변수의 값을 가져옴
       const genre = params.get('genre');
-//genre = '{{genre}}'
-        //alert(genre);
+      //genre = '{{genre}}'
+      //alert(genre);
     });
 
-    function open_chatroom(btn){
+    function open_chatroom(btn) {
       var parentDiv = btn.closest('div');
       var parentImg = btn.closest('.media');
 
@@ -105,6 +106,22 @@
             alert("로그인이 만료되었습니다.")
             logoutUser(); // 로그아웃 처리
           }
+        }
+      });
+    }
+    function showImage() {
+      const queryString = window.location.search;
+      const params = new URLSearchParams(queryString);
+      const genre = params.get('genre');
+      $.ajax({
+        type: "POST",
+        url: "/showimage", // 보호된 라우트
+        contentType: "application/json",
+        data: JSON.stringify({'genre_give': genre }),
+        success: function (response) {
+          imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
+          console.log(imageUrl+"뭔데")
+          $('.image-crop').css('background-image', 'url(' + imageUrl + ')');
         }
       });
     }
@@ -218,6 +235,22 @@
       window.location.href = '/main';
     }
   </script>
+  <style>
+    .image-crop {
+      width: 80px;
+      height: 80px;
+      background-image: url('/static/img/defaultimg.PNG');
+
+      /* 이미지 경로 설정 */
+      background-position: center;
+      /* 중앙 정렬 */
+      background-size: cover;
+      /* 이미지 크기를 div에 맞추되, 비율 유지 */
+      overflow: hidden;
+      /* div 크기를 넘어가는 부분 숨김 */
+      margin: 10px;
+    }
+  </style>
 </head>
 
 <body>
@@ -235,8 +268,9 @@
       </div>
     </div>
   </nav>
-  <div class="container mt-6">
-    <h1 class="title">{{ genre }}</h1>
+  <div class="container mt-6" style="display: flex; align-items: center;">
+    <div class="image-crop"></div>
+    <h1 class="title" style="margin-left: 15px;">{{ genre }}</h1>
   </div>
   <div class="container mt-6" id="intro-box">
     <h3 class="subtitle is-3">내 소개글 작성</h3>
