@@ -200,20 +200,22 @@ def read_sections():
 def post_lists():
 
     current_user = get_jwt_identity()
-    # member = db.members.find_one({"id": current_user})
+    member = db.members.find_one({"id": current_user})
 
     # 클라이언트로부터 데이터를 받기
-    intro_receive = request.json['intro_give']  # 클라이언트로부터 intro를 받는 부분
-    genre_receive = request.json['genre_give']
+    intro_receive = request.json.get('intro_give')  # 클라이언트로부터 intro를 받는 부분
+    genre_receive = request.json.get('genre_give')  # Use get method to avoid KeyError
+
+    if not genre_receive:
+        return jsonify({'result': 'fail', 'msg': '분야가 전달되지 않았습니다.'}), 400
 
     # 이미 존재하는지 확인
     if db.lists.find_one({'id': current_user, 'genre': genre_receive}):
         return jsonify({'result': 'fail', 'msg': '이미 해당 분야에서 소개글을 작성하였습니다.'})
-
-    list = {'id': current_user, 'genre': genre_receive, 'intro': intro_receive}
+    list_data = {'id': current_user, 'img_url' : member['image_path'], 'genre': genre_receive, 'intro': intro_receive}
 
     # mongoDB에 데이터를 넣기
-    db.lists.insert_one(list)
+    db.lists.insert_one(list_data)
 
     return jsonify({'result': 'success'})
 
