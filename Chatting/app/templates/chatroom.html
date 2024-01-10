@@ -15,14 +15,21 @@
         $(document).ready(function(){
             socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
             socket.on('connect', function(){
-                socket.emit('joined', { 'user1': '{{ user1 }}', 'user2': '{{ user2 }}' });
+                var user1 = '{{ user1 }}';
+                var user2 = '{{ user2 }}';
+                var img = '{{ img }}';
+                
+                var your_name = document.getElementById('chatroomName');
+                your_name.innerText = user2;
+
+                socket.emit('joined', { 'user1': user1, 'user2': user2, 'img': img });
             });
             // 입장했을 때, 채팅방에 있는 모든 사용자에게 발송되는 메세지
             socket.on('status', function(data){
                 //$('#msgArea').val($('#msgArea').val() + '<' + data.msg + '>\n');
                 //$('#msgArea').scrollTop($('#msgArea')[0].scrollHeight);
                 let msg = data.msg;
-
+                
                 // 전송받은 메세지를 #msgArea에 append
                 $('#msgArea').append(`
                     <p>&lt;${msg}&gt;</p><hr>
@@ -30,8 +37,6 @@
             });
             // 서버로부터 메세지가 도착하면 실행되는 함수
             socket.on('message', function(data){
-                //$('#msgArea').val($('#msgArea').val() + data.msg + '\n');
-                //$('#msgArea').scrollTop($('#msgArea')[0].scrollHeight);
                 let msg = data.msg;
 
                 $('#msgArea').append(`
@@ -49,7 +54,7 @@
                     const text = element.value;
 
                     element.value = '';
-                    socket.emit('text', {'msg': text});
+                    socket.emit('text', { 'msg': text });
                 }
             });
         });
@@ -58,7 +63,7 @@
             socket.emit('left', {}, function() {
                 socket.disconnect();
 
-                window.location.href = `http://localhost:5000/main`;
+                window.location.href = `http://localhost:5000/list`;
             });
         }
     </script>
