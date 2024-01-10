@@ -19,5 +19,4 @@ def chatroom():
     print(user1 + ' & ' + user2 + ' & ' +img)
     if user1 == '' or user2 == '':
         return redirect(url_for('.moveroom')) # 라우트 함수이름
-    return render_template('chatroom.html', user1=user1, user2=user2, img=img)
-    
+    return render_template('chatroom.html', user1=user1, user2=user2, img=img)#, 200, {'Content-Type': 'text/html; charset=utf-8'}

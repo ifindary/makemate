@@ -247,7 +247,7 @@
             var parent_div = btn.closest('div');
             parent_div = parent_div.parentNode;
             let text_p = parent_div.querySelector('p');
-            alert(text_p.textContent.trim())
+            //alert(text_p.textContent.trim())
             let genre = text_p.textContent.trim();
 
             window.location.href = `/list?genre=${genre}`;

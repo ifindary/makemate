@@ -19,22 +19,26 @@ def socketio_init(socketio):
     @socketio.on('joined', namespace='/chat')
     def joined(message):
         user = session.get('name')
-        user_img = session.get('img')
         
+        user_img = message['img']
         user1 = message['user1']
         user2 = message['user2']
+        
+        print(user1, 'joind', user2)
         
         #is_room = db.room_data.find_one({  })
         
         # 재입장 고려하지 않음
         while(True):
             room = random.randint(1000, 9999)
+            room = str(room)
             
-            print(room, " 넘버가 생성되었씁니다.")
+            print(room + " 넘버가 생성되었씁니다.")
             result = db.room_data.find_one({'room_id': room})
             
-            #result == 1이면 중복 / 0이면 중복된 값 없음
-            if result.modified_count == 0:
+            # 중복되지 않으면 null 반환
+            if result is None:
+                print("room create!")
                 break;
         
         join_room(room)
@@ -52,7 +56,7 @@ def socketio_init(socketio):
     @socketio.on('text', namespace='/chat')
     def text(message):
         room = session.get('room')
-        sender = session.get('name')
+        sender = session.get('user1')
         date = datetime.datetime.now()
         
         data = {
@@ -63,7 +67,7 @@ def socketio_init(socketio):
         }
         db.room_msg.insert_one(data)
         
-        print(date, ': ', message['msg'])
+        print(date, ': ', message['msg']) # -------------- 여기까지 됨
         
         emit('message', {'msg' : sender + ':' + message['msg']}, room=room)
         
