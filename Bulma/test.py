@@ -193,6 +193,10 @@ def read_sections():
     # 2. articles라는 키 값으로 article 정보 보내주기
     return jsonify({'result': 'success', 'sections': result}), 200
 
+#위 부분을 jinja2로 변경할 수 있음.
+#def sections_route():
+#    sections = list(db.sections.find({}, {'_id': 0}))
+#    return render_template('main.html', sections=sections)
 
 # main에서 분야 추가할 때 사용
 @app.route('/listup', methods=['POST'])
@@ -235,7 +239,7 @@ def genre_route():
     # genre를 어떻게 가져오는지에 따라 다름
     # 예: URL에서 쿼리 파라미터로 가져오기
     genre = request.args.get('genre')
-    return render_template('your_template.html', genre=genre)
+    return render_template('list.html', genre=genre)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
