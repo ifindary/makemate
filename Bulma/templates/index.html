@@ -45,7 +45,7 @@
     function SignUp() {
       //event.preventDefault();  // 폼의 기본 제출 동작 방지
       var formData = new FormData($("#signup-form")[0]);
-
+      
       let id = $("#id_give").val().trim();
       let pw = $("#pw_give").val().trim();
       let pw_check = $("#pw_check_give").val().trim();
@@ -55,6 +55,18 @@
       let fileInput = document.getElementById('file_give');
       if (fileInput.files.length === 0) {
         alert("파일을 업로드해주세요.");
+        return;
+      }
+      
+      if (!validateImageFile(fileInput)) {
+        // 이미지 파일이 유효하지 않은 경우 함수 종료
+        var preview = document.getElementById('image-preview');
+        //preview.src = e.target.result;
+        preview.style.display = 'none';
+
+        // 이미지 경로 표시
+        var pathDisplay = document.getElementById('image-path');
+        pathDisplay.textContent = ""; // 경로를 제거.
         return;
       }
 
@@ -132,11 +144,11 @@
       })
     }
     function showImagePreview(event) {
-    var fileInput = event.target;
-    var file = fileInput.files[0];
-    var reader = new FileReader();
+      var fileInput = event.target;
+      var file = fileInput.files[0];
+      var reader = new FileReader();
 
-    reader.onload = function(e) {
+      reader.onload = function (e) {
         // 이미지 미리보기 업데이트
         var preview = document.getElementById('image-preview');
         preview.src = e.target.result;
@@ -145,11 +157,24 @@
         // 이미지 경로 표시
         var pathDisplay = document.getElementById('image-path');
         pathDisplay.textContent = fileInput.value; // 경로를 표시합니다.
-    };
+      };
 
-    // 파일 읽기
-    reader.readAsDataURL(file);
-}
+      // 파일 읽기
+      reader.readAsDataURL(file);
+    }
+
+    function validateImageFile(fileInput) {
+      var file = fileInput.files[0];
+      var validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'];
+
+      if (file && validImageTypes.includes(file.type)) {
+        return true;
+      } else {
+        alert("유효한 이미지 파일을 업로드해주세요. (jpg, jpeg, png, gif)");
+        fileInput.value = ''; // 파일 입력 필드 초기화
+        return false;
+      }
+    }
 
     function showLoginState() {
       // let loginid = ""
@@ -228,10 +253,11 @@
             </span>
           </label>
         </div>
-        <p id="image-path"></p>  <!-- 이미지 경로 표시 -->
-            <img id="image-preview" src="" alt="Image Preview" style="max-width: 200px; max-height: 200px; display: none;"> <!-- 이미지 미리보기 -->
+        <p id="image-path"></p> <!-- 이미지 경로 표시 -->
+        <img id="image-preview" src="" alt="Image Preview" style="max-width: 200px; max-height: 200px; display: none;">
+        <!-- 이미지 미리보기 -->
       </div>
-      
+
 
       <div class="field">
         <label class="label">이름</label>
@@ -272,15 +298,15 @@
         </div>
       </div>
     </form>
-      <div class="field is-grouped">
-        <div class="control">
-          <button class="button is-link" type="button" onClick="SignUp()">가입</button>
-        </div>
-        <div class="control">
-          <button class="button is-link is-light" onClick="LoginOpenClose()">취소</button>
-        </div>
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-link" type="button" onClick="SignUp()">가입</button>
       </div>
-    
+      <div class="control">
+        <button class="button is-link is-light" onClick="LoginOpenClose()">취소</button>
+      </div>
+    </div>
+
   </div>
 </body>
 
