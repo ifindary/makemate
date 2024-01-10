@@ -48,7 +48,7 @@ def movelist():
     genre = request.args.get('genre')
     print(genre)
     return render_template('list.html', genre=genre)
-    
+
 @app.route('/chatroom')
 def movechatroom():
     return render_template('chatroom.html')
