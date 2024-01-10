@@ -20,8 +20,8 @@ app.config["JWT_SECRET_KEY"] = "tarzan"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=10) # 초 단위
 jwt = JWTManager(app)
 
-client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
-db = client.dbsignuptest  # 'dbjungle'라는 이름의 db를 만들거나 사용합니다.
+client = MongoClient('mongodb://minitest:minitest@3.39.231.115', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
+db = client.dbminitest  # 'dbjungle'라는 이름의 db를 만들거나 사용합니다.
 
 # 이미지를 저장할 경로 설정
 UPLOAD_FOLDER = 'static'#여기에 웹서버 경로 설정
@@ -163,4 +163,4 @@ def read_members():
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5000, debug=True)
+    app.run('0.0.0.0', port=5001, debug=True)
