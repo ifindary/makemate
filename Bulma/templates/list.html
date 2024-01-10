@@ -13,32 +13,25 @@
   <link rel="stylesheet" href="static/css/mystyles.css">
 
     <script>
-      $(document).ready(function(){
-        // URL에서 문자열 추출
-        //const queryString = window.location.search;
-        // 쿼리 문자열 파싱
-        //const params = new URLSearchParams(queryString);
-        // 변수의 값을 가져옴
-        //const genre = params.get('genre');
-        //genre = '{{genre}}'
-        
-      })
       document.addEventListener('DOMContentLoaded', function() {
         // 문서가 로드되면 실행할 코드
-        alert('genre');
+        // URL에서 문자열 추출
+        const queryString = window.location.search;
+        // 쿼리 문자열 파싱
+        const params = new URLSearchParams(queryString);
+        // 변수의 값을 가져옴
+        const genre = params.get('genre');
     });
     
-
-      
     function open_chatroom(btn){
       var parentTr = btn.closest('tr');
 
       var img = parentTr.querySelector('td img').src;
       var user2 = parentTr.querySelector('td:nth-child(3)').textContent; //user2가 첫 메세지 수신자 / user1은 채팅을 시작한 사람
-      alert(user2)
+      //alert(user2)
       
         let token = localStorage.getItem("access_token");
-        alert(token)
+        //alert(token)
         if (!token) {
           window.location.href = '/';
         }
@@ -48,9 +41,8 @@
           headers: { "Authorization": "Bearer " + token },
           success: function (response) {
               // 사용자가 로그인 상태
-              //id = response["logged_in_as"]
               let user1 = response["logged_in_as"];
-              alert(user1)
+              //alert(user1)
 
               window.location.href = `/moveroom?img=${img}&user1=${user1}&user2=${user2}`;
           },
@@ -158,7 +150,7 @@
             </div>
             <div class="media-content">
               <p class="title is-4">유저 이름</p>
-              <p class="subtitle is-6"><a>이 정글러와 채팅하기</a></p>
+              <p class="subtitle is-6"><a onclick="open_chatroom(this)">이 정글러와 채팅하기</a></p>
             </div>
           </div>
 
@@ -177,7 +169,7 @@
             </div>
             <div class="media-content">
               <p class="title is-4">유저 이름</p>
-              <p class="subtitle is-6"><a>이 정글러와 채팅하기</a></p>
+              <p class="subtitle is-6"><a onclick="open_chatroom(this)">이 정글러와 채팅하기</a></p>
             </div>
           </div>
 
@@ -196,7 +188,7 @@
             </div>
             <div class="media-content">
               <p class="title is-4">유저 이름</p>
-              <p class="subtitle is-6"><a>이 정글러와 채팅하기</a></p>
+              <p class="subtitle is-6"><a onclick="open_chatroom(this)">이 정글러와 채팅하기</a></p>
             </div>
           </div>
 
