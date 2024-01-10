@@ -80,128 +80,79 @@
       </div>
     </div>
   </nav>
-  <div class="container">
-    <div class="columns is-multiline is-mobile is-centered">
-      <div class="column is-half list">
-        <table class="table">
-          <thead>
-            <tr>
-              <th><abbr title="Position">순서</abbr></th>
-              <th><abbr title="Profile image">사진</abbr></th>
-              <th><abbr title="Name">이름</abbr></th>
-              <th><abbr title="Introduction">소개</abbr></th>
-              <th><abbr title="Go chatroom">채팅하기</abbr></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th>1</th>
-              <td>
-                <img src="https://bulma.io/images/placeholders/32x32.png">
-              </td>
-              <td>김정글<strong>(추천)</strong></td>
-              <td>자기소개 데모 텍스트</td>
-              <td><a onClick="location.href='/chatroom'" title="chatroom">채팅</a></td>
-            </tr>
-            <tr>
-              <th>2</th>
-              <td>
-                <img src="https://bulma.io/images/placeholders/32x32.png">
-              </td>
-              <td>이정글</td>
-              <td>자기소개 데모 텍스트</td>
-              <td><a onClick="location.href='/chatroom'" title="chatroom">채팅</a></td>
-            </tr>
-            <tr>
-              <th>3</th>
-              <td>
-                <img src="https://bulma.io/images/placeholders/32x32.png">
-              </td>
-              <td>박정글</td>
-              <td>자기소개 데모 텍스트</td>
-              <td><a location.href='login.html' title="chatroom">채팅</a></td>
-            </tr>
-            <tr>
-              <th>4</th>
-              <td>
-                <img src="https://bulma.io/images/placeholders/32x32.png">
-              </td>
-              <td>최정글</td>
-              <td>자기소개 데모 텍스트</td>
-              <td><a location.href='login.html' title="chatroom">채팅</a></td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="columns">
-          <button class="button m-1" id="btn-intro-box" onClick="IntroOpenClose()">신규 등록</button>
-          <form class="box m-1 is-hidden" id="intro-box">
-            <div class="field">
-              <label class="label">소개글</label>
-              <div class="control">
-                <input class="input" id="self_intro" type="text" placeholder="내용" name="self_intro">
-              </div>
-            </div>
-            <button class="button is-primary my-3" onClick="postSection()">추가하기</button>
-          </form>
+  <div class="container mt-6">
+    <h1 class="title">분야 이름</h1>
+  </div>
+  <div class="container mt-6">
+    <h3 class="subtitle is-3">내 소개글 작성</h3>
+    <form class="box" id="posting-box">
+      <div class="field">
+        <div class="control">
+          <input class="input" id="section_title" type="text" placeholder="내용" name="section_title">
         </div>
       </div>
-
-      <div class="column comment">
-        <article class="media">
-          <figure class="media-left">
-            <p class="image is-64x64">
-              <img src="https://bulma.io/images/placeholders/128x128.png">
-            </p>
-          </figure>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>사용자 이름</strong>
-                <br>
-                해당 분야에 대한 댓글
-                <br>
-              </p>
+      <button class="button is-primary my-3" onClick="postSection()">작성하기</button>
+    </form>
+  </div>
+  <div class="container my-6">
+    <h3 class="subtitle is-3">정글러 목록</h3>
+    <div class="container">
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4">유저 이름</p>
+              <p class="subtitle is-6"><a>이 정글러와 채팅하기</a></p>
             </div>
           </div>
-        </article>
 
-        <article class="media">
-          <figure class="media-left">
-            <p class="image is-64x64">
-              <img src="https://bulma.io/images/placeholders/128x128.png">
-            </p>
-          </figure>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <strong>사용자 이름</strong>
-                <br>
-                해당 분야에 대한 댓글
-                <br>
-              </p>
+          <div class="content">
+            자기소개를 자유롭게 남길 수 있습니다.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4">유저 이름</p>
+              <p class="subtitle is-6"><a>이 정글러와 채팅하기</a></p>
             </div>
           </div>
-        </article>
 
-        <article class="media">
-          <figure class="media-left">
-            <p class="image is-64x64">
-              <img src="https://bulma.io/images/placeholders/128x128.png">
-            </p>
-          </figure>
-          <div class="media-content">
-            <div class="field">
-              <p class="control">
-                <textarea class="textarea" placeholder="내용"></textarea>
-              </p>
+          <div class="content">
+            자기소개를 자유롭게 남길 수 있습니다.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+              </figure>
             </div>
-            <div class="field">
-              <p class="control">
-                <button class="button">댓글 작성</button>
-              </p>
+            <div class="media-content">
+              <p class="title is-4">유저 이름</p>
+              <p class="subtitle is-6"><a>이 정글러와 채팅하기</a></p>
             </div>
           </div>
-        </article>
+
+          <div class="content">
+            자기소개를 자유롭게 남길 수 있습니다.
+          </div>
+        </div>
       </div>
     </div>
   </div>
