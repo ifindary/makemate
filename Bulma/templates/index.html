@@ -126,7 +126,8 @@
         data: JSON.stringify({ id_give: id, pw_give: pw }),
         success: function (response) {
           if (response["result"] == "success") {
-            alert(response["msg"] + "\n" + response["access_token"]);
+            //alert(response["msg"] + "\n" + response["access_token"]);
+            alert(response["msg"]);
             //alert("로그인 성공");
 
             localStorage.setItem("access_token", response["access_token"]);
