@@ -72,6 +72,8 @@
       let pw_check = $("#pw_check_give").val().trim();
       let name = $("#name_give").val().trim();
       let file = $("#file_give").val().trim();
+      let checkbox = document.getElementById('myCheckbox');
+
 
       let fileInput = document.getElementById('file_give');
       if (fileInput.files.length === 0) {
@@ -102,6 +104,10 @@
       if (pw.length === 0 || pw_check.length === 0) {
         alert("비밀번호를 입력해주세요.");
         return; // 함수를 여기서 종료하고 더 이상 진행하지 않음
+      } 
+      if (!checkbox.checked) {
+        alert('이용 약관에 동의해주세요.');
+        return;
       }
 
       // 2. memo에 POST 방식으로 메모 생성 요청하기
@@ -314,8 +320,8 @@
       <div class="field is-hidden">
         <div class="control">
           <label class="checkbox">
-            <input type="checkbox">
-            <a href="#">terms and conditions</a>에 동의합니다.
+            <input type="checkbox" id="myCheckbox">
+            <a>terms and conditions</a>에 동의합니다.
           </label>
         </div>
       </div>
