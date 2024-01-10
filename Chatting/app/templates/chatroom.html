@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MakeMate | 채팅방</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="css/mystyles.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket;
+        $(document).ready(function(){
+            socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
+            socket.on('connect', function(){
+                socket.emit('joined', {});
+            });
+            socket.on('status', function(data){
+                //$('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
+                //$('#chat').scrollTop($('#chat')[0].scrollHeight);
+                //$('#msgArea').val($('#msgArea').val() + '<' + data.msg + '>\n');
+                //$('#msgArea').scrollTop($('#msgArea')[0].scrollHeight);
+                let msg = data.msg;
+
+                $('#msgArea').append(`
+                    <p>&lt;${msg}&gt;</p><hr>
+                `)
+            });
+            socket.on('message', function(data){
+                //$('#msgArea').val($('#msgArea').val() + data.msg + '\n');
+                //$('#msgArea').scrollTop($('#msgArea')[0].scrollHeight);
+                let msg = data.msg;
+
+                $('#msgArea').append(`
+                    <p>&lt;${msg}&gt;</p><hr>
+                `)
+            });
+            $('#chat-input').keypress(function(e){
+                var code = e.keyCode || e.which;
+                if(code == 13) {
+                    //text = $('#chat-input').val();
+                    //$('#chat-input').val('');
+                    const element = document.querySelector('#chat-input');
+                    const text = element.value;
+
+                    element.value = '';
+                    socket.emit('text', {'msg': text});
+                }
+            });
+        });
+        function leave_room() {
+            socket.emit('left', {}, function() {
+                socket.disconnect();
+
+                window.location.href = "{{ url_for('main.index') }}";
+            });
+        }
+    </script>
+    
+  </head>
+  <body>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item">
+            <h1 class="title" onClick="location.href='C:\Users\LG\Desktop\makemate\makemate\Bulma\main.html'">MakeMate</h1>
+        </a>
+    </div>
+
+    <div class="navbar-end">
+        <div class="navbar-item">
+            <a class="button is-light" onClick="location.href='C:\Users\LG\Desktop\makemate\makemate\Bulma\login.html'">
+                로그아웃
+            </a>
+        </div>
+    </div>
+    </nav>
+
+    <div id="chatroom" class="col-6">
+        <section>
+            <div class="container py-5">
+                <div class="row d-flex justify-content-center">
+                    <div class="col">
+
+                        <div class="card" style="border-radius: 15px;">
+                            <div class="card-header d-flex justify-content-center align-items-center p-3 bg-info text-white border-bottom-0" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                                <p class="mb-0 fw-bold" id="chatroomName">대화 중인 상대방 이름</p>
+                                <input type="hidden" id="chatroomNo">
+                                <button class="delete" onclick="location.href='C:\Users\LG\Desktop\makemate\makemate\Bulma\main.html'"></button>
+                            </div>
+                            
+
+                            <div class="card-body">
+                                <div id="msgArea" style="height: 500px; overflow-y: auto;">
+                                </div>
+
+                                <textarea class="textarea is-success" id="chat-input" placeholder="채팅 내용" aria-label="chat input" rows="3"></textarea>
+                                <div class="d-flex justify-content-end mt-2"><button class="button is-success" id="chat-send">전송</button></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+  </body>
+</html>
