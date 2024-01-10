@@ -2,8 +2,9 @@ from flask import session
 from flask_socketio import emit, join_room, leave_room, Namespace
 
 import datetime
-from pymongo import MongoClient
+import random
 
+from pymongo import MongoClient
 
 client = MongoClient('localhost', 27017)
 db = client.save_chat #테이블 이름 - 컬렉션 상위
@@ -17,20 +18,36 @@ db = client.save_chat #테이블 이름 - 컬렉션 상위
 def socketio_init(socketio):
     @socketio.on('joined', namespace='/chat')
     def joined(message):
-        room = session.get('room')
         user = session.get('name')
+        user_img = session.get('img')
+        
+        user1 = message['user1']
+        user2 = message['user2']
+        
+        #is_room = db.room_data.find_one({  })
+        
+        # 재입장 고려하지 않음
+        while(True):
+            room = random.randint(1000, 9999)
+            
+            result = db.room_data.find_one({'room_id': room})
+            
+            #result == 1이면 중복 / 0이면 중복된 값 없음
+            if result.modified_count == 0:
+                break;
+        
         join_room(room)
         
         data = {
             'room_id': room,
-            'user1': user,
-            #'user2': '',
+            'user1': user1,
+            'user2': user2,
             #'genre': '',
         }
         db.room_data.insert_one(data)
         
-        emit('status', {'msg':user + '님이 입장하셧습니다'}, room=room)
-        
+        emit('status', {'msg':user1 + '님이 입장하셧습니다'}, room=room)
+          
     @socketio.on('text', namespace='/chat')
     def text(message):
         room = session.get('room')
