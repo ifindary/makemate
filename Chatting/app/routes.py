@@ -11,7 +11,7 @@ def index():
         session['img'] = request.form['img']    # user2의 이미지
         
         return redirect(url_for('main.chat'))
-    return render_template('index.html')
+    return render_template('chat.html')
 
 @main.route('/chat')
 def chat():
@@ -21,7 +21,7 @@ def chat():
     img = session.get('img', '')
     
     if user1 == '' or user2 == '':
-        return redirect(url_for('.index'))
+        return redirect(url_for('.chat'))
     return render_template('chatroom.html', user1=user1, user2=user2, img=img)
     #return render_template('../../Bulma/templates/chatroom.html', name=name, room=room)
     
