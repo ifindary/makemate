@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from flask_jwt_extended import get_jwt
 from werkzeug.utils import secure_filename
+from datetime import timedelta
 import requests # TEST용 지우기
 import os
 import json #TEST용 지우기 
@@ -16,7 +17,7 @@ import json #TEST용 지우기
 # 앱 설정
 app = Flask(__name__)
 app.config["JWT_SECRET_KEY"] = "tarzan"
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = 20 # 초 단위
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(seconds=10) # 초 단위
 jwt = JWTManager(app)
 
 client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
@@ -123,6 +124,10 @@ def user_logout():
     jti = get_jwt()['jti']
     jwt_blocklist.add(jti)
     return jsonify({"msg": "로그아웃 되었습니다."}), 200
+
+@jwt.expired_token_loader
+def my_expired_token_callback(jwt_header, jwt_payload):
+    return jsonify({"msg": "로그인 시간이 만료되었습니다."}), 401
 
 # 토큰이 블랙리스트에 있는지 확인하는 콜백 함수
 @jwt.token_in_blocklist_loader
