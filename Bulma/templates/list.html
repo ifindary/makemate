@@ -15,6 +15,7 @@
 
   <script>
     $(document).ready(function () {
+      showLoginState()
       IntroOpenClose();
       showList();
       showImage()
@@ -98,7 +99,14 @@
         headers: { "Authorization": "Bearer " + token },
         success: function (response) {
           // 사용자가 로그인 상태
-
+          id = response["logged_in_as"]
+          name = response["name"]
+          $("#user_name_box1").text(name + " 님 환영합니다.");
+          imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
+          // image-crop 클래스를 가진 요소의 배경 이미지 설정
+          console.log(imageUrl + "이미지입니다")
+          $('.image-crop1').css('background-image', 'url(' + imageUrl + ')');
+          //static안해도 찾아감?
         },
         error: function (xhr, status) {
           if (xhr.status === 401) {
@@ -117,11 +125,11 @@
         type: "POST",
         url: "/showimage", // 보호된 라우트
         contentType: "application/json",
-        data: JSON.stringify({'genre_give': genre }),
+        data: JSON.stringify({ 'genre_give': genre }),
         success: function (response) {
           imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
-          console.log(imageUrl+"뭔데")
-          $('.image-crop').css('background-image', 'url(' + imageUrl + ')');
+          console.log(imageUrl)
+          $('.image-crop4').css('background-image', 'url(' + imageUrl + ')');
         }
       });
     }
@@ -236,8 +244,23 @@
     }
   </script>
   <style>
-    .image-crop {
+    .image-crop4 {
       width: 80px;
+      height: 80px;
+      background-image: url('/static/img/defaultimg.PNG');
+
+      /* 이미지 경로 설정 */
+      background-position: center;
+      /* 중앙 정렬 */
+      background-size: cover;
+      /* 이미지 크기를 div에 맞추되, 비율 유지 */
+      overflow: hidden;
+      /* div 크기를 넘어가는 부분 숨김 */
+      margin: 10px;
+    }
+
+    .image-crop1 {
+      width: 60px;
       height: 80px;
       background-image: url('/static/img/defaultimg.PNG');
 
@@ -261,6 +284,10 @@
     </div>
 
     <div class="navbar-end">
+      <div class="image-crop1"></div>
+      <div id="user_name_box1" class="navbar-item" style="float:right;">
+        님 환영합니다.
+      </div>
       <div class="navbar-item">
         <a class="button is-light" onClick=logout()>
           로그아웃
