@@ -160,7 +160,37 @@ def read_members():
     # 2. articles라는 키 값으로 article 정보 보내주기
     return jsonify({'result': 'success', 'members': result})
 
+# main에서 분야 추가할 때 사용
+@app.route('/collect', methods=['POST'])
+def post_sections():
+    # 클라이언트로부터 데이터를 받기
+    image_receive = request.files['section_image']  # 클라이언트로부터 image를 받는 부분
+    title_receive = request.form['section_title']  # 클라이언트로부터 title을 받는 부분
 
+    # title이 이미 존재하는지 확인
+    if db.sections.find_one({'title': title_receive}):
+        return jsonify({'result': 'fail', 'msg': '이미 존재하는 분야입니다.'})
+
+    # 파일명 안전하게 처리
+    filename = secure_filename(image_receive.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+    # 파일 저장
+    image_receive.save(file_path)
+
+    section = {'image': file_path, 'title': title_receive}
+
+    # mongoDB에 데이터를 넣기
+    db.sections.insert_one(section)
+
+    return jsonify({'result': 'success'})
+
+@app.route('/collect', methods=['GET'])
+def read_sections():
+    # mongoDB에서 모든 데이터 조회해오기 (Read)
+    result = list(db.sections.find({}, {'_id': 0}))
+    # 2. articles라는 키 값으로 article 정보 보내주기
+    return jsonify({'result': 'success', 'sections': result})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
