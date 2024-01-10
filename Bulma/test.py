@@ -20,8 +20,8 @@ app.config["JWT_SECRET_KEY"] = "tarzan"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=10) # 초 단위
 jwt = JWTManager(app)
 
-client = MongoClient('localhost', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
-db = client.dbsignuptest  # 'dbjungle'라는 이름의 db를 만들거나 사용합니다.
+client = MongoClient('mongodb://minitest:minitest@3.39.231.115', 27017)  # mongoDB는 27017 포트로 돌아갑니다.
+db = client.dbminitest  # 'dbjungle'라는 이름의 db를 만들거나 사용합니다.
 
 # 이미지를 저장할 경로 설정
 UPLOAD_FOLDER = 'static'#여기에 웹서버 경로 설정
@@ -43,9 +43,11 @@ def movemain():
 def moveindex():
     return render_template('index.html')
 
-@app.route('/list')
+@app.route('/list', methods=['GET'])
 def movelist():
-    return render_template('list.html')
+    genre = request.args.get('genre')
+    print(genre)
+    return render_template('list.html', genre=genre)
 
 @app.route('/chatroom')
 def movechatroom():
@@ -169,28 +171,27 @@ def post_sections():
 
     # title이 이미 존재하는지 확인
     if db.sections.find_one({'title': title_receive}):
-        return jsonify({'result': 'fail', 'msg': '이미 존재하는 분야입니다.'})
+        return jsonify({'result': 'fail', 'msg': '이미 존재하는 분야입니다.'}), 200
 
     # 파일명 안전하게 처리
-    filename = secure_filename(image_receive.filename)
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    post_filename = secure_filename(image_receive.filename)
+    post_file_path = os.path.join(app.config['UPLOAD_FOLDER'], post_filename)
 
     # 파일 저장
-    image_receive.save(file_path)
+    image_receive.save(post_file_path)
 
-    section = {'image': file_path, 'title': title_receive}
+    section = {'image': post_file_path, 'title': title_receive}
 
     # mongoDB에 데이터를 넣기
     db.sections.insert_one(section)
+    return jsonify({'result':'success','msg': '추가 성공'}), 200
 
-    return jsonify({'result': 'success'})
-
-@app.route('/collect', methods=['GET'])
+@app.route('/collectread', methods=['GET'])
 def read_sections():
     # mongoDB에서 모든 데이터 조회해오기 (Read)
     result = list(db.sections.find({}, {'_id': 0}))
     # 2. articles라는 키 값으로 article 정보 보내주기
-    return jsonify({'result': 'success', 'sections': result})
+    return jsonify({'result': 'success', 'sections': result}), 200
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

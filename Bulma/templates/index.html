@@ -14,21 +14,22 @@
       showLoginStateCheck();
     });
     function showLoginStateCheck() {
-      
+
       let token = localStorage.getItem("access_token");
       if (token) {
-        window.location.href = '/main';
+        $.ajax({
+          type: "GET",
+          url: "/protected", // 보호된 라우트
+          headers: { "Authorization": "Bearer " + token },
+          success: function (response) {
+            window.location.href = '/main';
+          },
+          error: function (xhr, status) {
+            return;
+          }
+        })
       }
-      $.ajax({
-        type: "GET",
-        url: "/protected", // 보호된 라우트
-        headers: { "Authorization": "Bearer " + token },
-        success: function (response) {
-          window.location.href = '/main';
-        },
-        error: function (xhr, status) {
-        }
-      });
+      return;
     }
 
     function SignUpOpenClose() {

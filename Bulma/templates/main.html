@@ -13,8 +13,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <link rel="stylesheet" href="static/css/mystyles.css">
     <script>
+        //let id
         $(document).ready(function () {
             showLoginState();
+            //loadProfileImg()
             //showUserState();
             showSection();
         });
@@ -62,6 +64,11 @@
                     // 사용자가 로그인 상태
                     id = response["logged_in_as"]
                     $("#user_name_box").text(id + " 님 환영합니다.");
+                    imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
+                    // image-crop 클래스를 가진 요소의 배경 이미지 설정
+                    //console.log(imageUrl)
+                    $('.image-crop').css('background-image', 'url(' + imageUrl + ')');
+                    //static안해도 찾아감?
 
                 },
                 error: function (xhr, status) {
@@ -73,6 +80,26 @@
                 }
             });
         }
+        // function loadProfileImg() {
+        //     // 2. memo에 POST 방식으로 메모 생성 요청하기
+        //     console.log("아이디가 뭐냐?" + id)
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/loadprofileimg",
+        //         contentType: "application/json",
+        //         data: JSON.stringify({ id_give: id }),
+        //         success: function (response) {
+        //             if (response["result"] == "success") {
+        //                 let imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
+        //                 // image-crop 클래스를 가진 요소의 배경 이미지 설정
+        //                 $('.image-crop').css('background-image', 'url(' + '/static/' + imageUrl + ')');
+        //             }
+        //             else {
+        //                 alert("서버 오류!")
+        //             }
+        //         }
+        //     })
+        // }
 
         function logoutUser() {
             localStorage.removeItem("access_token"); // 토큰 삭제
@@ -98,7 +125,7 @@
 
         function postSection() {
             //event.preventDefault();  // 폼의 기본 제출 동작 방지
-            var formData = new FormData($("#signup-form")[0]);
+            var formData = new FormData($("#posting-box")[0]);
 
             let image = $("#section_image").val().trim();
             let title = $("#section_title").val().trim();
@@ -136,13 +163,14 @@
                 contentType: false,  // 이렇게 해야 FormData가 올바르게 전송됨
                 success: function (response) { // 성공하면
                     if (response["result"] == "success") {
-                        alert("추가 성공!")
+                        alert(response["msg"]);
                         window.location.reload();
                     } else { // 실패하면
                         alert("다시 시도해주세요.")
                     }
                 }
             })
+            return true
         }
 
         function showSection() {
@@ -151,14 +179,16 @@
 
             $.ajax({
                 type: "GET",
-                url: "/collect",
+                url: "/collectread",
                 data: {},
                 success: function (response) {
                     let sections = response["sections"];
-                    console.log(sections);
+                    //console.log(sections);
                     for (let i = 0; i < sections.length; i++) {
                         addCards(sections[i]["image"], sections[i]["title"]);
+                        //console.log(sections[i]["image"]);
                     }
+
                 }
             })
         }
@@ -180,7 +210,7 @@
             </div>`;
             $('#cards-box').append(temp_html);
         }
-        
+
         function showImagePreview(event) {
             var fileInput = event.target;
             var file = fileInput.files[0];
@@ -200,12 +230,26 @@
             // 파일 읽기
             reader.readAsDataURL(file);
         }
+
+        function validateImageFile(fileInput) {
+            var file = fileInput.files[0];
+            var validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'];
+
+            if (file && validImageTypes.includes(file.type)) {
+                return true;
+            } else {
+                alert("유효한 이미지 파일을 업로드해주세요. (jpg, jpeg, png, gif)");
+                fileInput.value = ''; // 파일 입력 필드 초기화
+                return false;
+            }
+        }
     </script>
     <style>
         .image-crop {
             width: 60px;
             height: 80px;
-            background-image: url('/static/img.png');
+            background-image: url('/static/img/defaultimg.PNG');
+
             /* 이미지 경로 설정 */
             background-position: center;
             /* 중앙 정렬 */
@@ -251,7 +295,7 @@
 
 
         <div class="columns is-centered">
-            <form method="post" action="/collect" class="box is-hidden" id="posting-box" enctype="multipart/form-data"
+            <form method="post" action="/collect" id="posting-box" class="box is-hidden" enctype="multipart/form-data"
                 onsubmit="return postSection()">
                 <div class="field">
                     <label class="label">분야 이름</label>
@@ -275,10 +319,12 @@
                     <p id="image-path"></p>
                     <img id="image-preview" src="" alt="Image Preview"
                         style="max-width: 200px; max-height: 200px; display: none;">
-                    <button class="button is-primary my-3" onClick="postSection()">추가하기</button>
             </form>
+            <button class="button is-primary my-3" type="button" onClick="postSection()">추가하기</button>
+
         </div>
     </div>
+
 
     <div class="container">
         <div class="columns is-multiline is-mobile" id="cards-box">
