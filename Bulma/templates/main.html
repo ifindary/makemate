@@ -192,10 +192,10 @@
                 }
             })
         }
-
+        var num = 1000;
         function addCards(image, title) {
             let temp_html = `<div class="column is-one-third">
-                <div class="card">
+                <div class="card" id="${num + 1}">
                     <div class="card-image">
                         <figure class="image is-4by3">
                             <button type="button" onclick="open_list(this)">
@@ -247,11 +247,12 @@
         function open_list(btn){
             var parent_div = btn.closest('div');
             parent_div = parent_div.parentNode;
+            let room_id = parent_div.attr('id');
             let text_p = parent_div.querySelector('p');
             //alert(text_p.textContent.trim())
             let genre = text_p.textContent.trim();
 
-            window.location.href = `/list?genre=${genre}`;
+            window.location.href = `/list?genre=${genre}&room_id=${room_id}`;
         }
 
         function goMain() {

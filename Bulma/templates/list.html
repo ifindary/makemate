@@ -19,7 +19,8 @@
       showList();
       showImage()
     });
-
+    var list_genre;
+    var room_Id;
     document.addEventListener('DOMContentLoaded', function () {
       // 문서가 로드되면 실행할 코드
       // URL에서 문자열 추출
@@ -28,8 +29,11 @@
       const params = new URLSearchParams(queryString);
       // 변수의 값을 가져옴
       const genre = params.get('genre');
+      const room_id = params.get('room_id');
       //genre = '{{genre}}'
       //alert(genre);
+      list_genre = genre;
+      room_Id = room_id;
     });
 
     function open_chatroom(btn) {
