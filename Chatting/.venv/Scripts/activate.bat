@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\LG\Desktop\정글-미니프로젝트\webSocket\.venv
+set VIRTUAL_ENV=C:\Users\LG\Desktop\makemate\makemate\Chatting\.venv
 
 if not defined PROMPT set PROMPT=$P$G
 

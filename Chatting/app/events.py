@@ -2,8 +2,8 @@ from flask import session
 from flask_socketio import emit, join_room, leave_room, Namespace
 
 import datetime
-
 from pymongo import MongoClient
+
 
 client = MongoClient('localhost', 27017)
 db = client.save_chat #테이블 이름 - 컬렉션 상위
