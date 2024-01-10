@@ -28,16 +28,14 @@
                 // 아니면(눈에 보이지 않으면) posting-box를 보이게 변경하고
                 $("#posting-box").addClass("is-hidden");
                 // 다시 버튼을 클릭하면, 박스 닫기를 할 수 있게 텍스트 바꿔두기
-                $("#btn-posting-box").html("분야 추가 열기");
-            }
-        }
+                $("#btn-posting-box").html("분야 추가 열기");}}
 
         function logout() {
             let token = localStorage.getItem("access_token");
             $.ajax({
                 type: "GET",
                 url: "/logout",
-                headers: { "Authorization": "Bearer " + token },
+                headers: {"Authorization": "Bearer " + token},
                 success: function (response) {
                     alert(response["msg"]);
                     localStorage.removeItem("access_token"); // 로컬 저장소에서 토큰 삭제
@@ -53,7 +51,7 @@
             if (!token) {
                 window.location.href = '/';
             }
-
+   
         }
 
     </script>
@@ -98,7 +96,6 @@
                         <input class="input" type="text" placeholder="이름">
                     </div>
                 </div>
-
                 <div class="field">
                     <label class="label">프로필 사진</label>
                     <div class="file is-boxed is-large">
@@ -112,26 +109,7 @@
                         </label>
                     </div>
                 </div>
-
                 <button class="button is-primary">추가하기</button>
-            </form>
-
-
-            <div class="field">
-                <label class="label">프로필 사진</label>
-                <div class="file is-boxed is-large">
-                    <label class="file-label">
-                        <input class="file-input" type="file" name="resume">
-                        <span class="file-cta">
-                            <span class="file-label">
-                                사진 업로드
-                            </span>
-                        </span>
-                    </label>
-                </div>
-            </div>
-
-            <button class="button is-primary">추가하기</button>
             </form>
         </div>
 
@@ -139,74 +117,74 @@
             <div class="column is-one-third">
                 <div class="card">
                     <div class="card-image">
-                        <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
-                                <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
-                            </button>
-                        </figure>
+                      <figure class="image is-4by3">
+                        <button type="button" onClick="location.href='list.html'">
+                            <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
+                        </button>
+                      </figure>
                     </div>
                     <p class="card-header-title is-centered">
                         분야 이름
                     </p>
-                </div>
+                  </div>
             </div>
             <div class="column is-one-third">
                 <div class="card">
                     <div class="card-image">
-                        <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
-                                <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
-                            </button>
-                        </figure>
+                      <figure class="image is-4by3">
+                        <button type="button" onClick="location.href='list.html'">
+                            <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
+                        </button>
+                      </figure>
                     </div>
                     <p class="card-header-title is-centered">
                         분야 이름
                     </p>
-                </div>
+                  </div>
             </div>
             <div class="column is-one-third">
                 <div class="card">
                     <div class="card-image">
-                        <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
-                                <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
-                            </button>
-                        </figure>
+                      <figure class="image is-4by3">
+                        <button type="button" onClick="location.href='list.html'">
+                            <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
+                        </button>
+                      </figure>
                     </div>
                     <p class="card-header-title is-centered">
                         분야 이름
                     </p>
-                </div>
+                  </div>
             </div>
             <div class="column is-one-third">
                 <div class="card">
                     <div class="card-image">
-                        <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
-                                <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
-                            </button>
-                        </figure>
+                      <figure class="image is-4by3">
+                        <button type="button" onClick="location.href='list.html'">
+                            <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
+                        </button>
+                      </figure>
                     </div>
                     <p class="card-header-title is-centered">
                         분야 이름
                     </p>
-                </div>
+                  </div>
             </div>
             <div class="column is-one-third">
                 <div class="card">
                     <div class="card-image">
-                        <figure class="image is-4by3">
-                            <button type="button" onClick="location.href='list.html'">
-                                <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
-                            </button>
-                        </figure>
+                      <figure class="image is-4by3">
+                        <button type="button" onClick="location.href='list.html'">
+                            <img src="https://bulma.io/images/placeholders/480x480.png" alt="Placeholder image">
+                        </button>
+                      </figure>
                     </div>
                     <p class="card-header-title is-centered">
                         분야 이름
                     </p>
-                </div>
+                  </div>
             </div>
-        </div>
+    </div>
 </body>
 
 </html>
