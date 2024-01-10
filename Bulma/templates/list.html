@@ -1,33 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MakeMate | 유저 목록</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="static/css/mystyles.css">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MakeMate | 유저 목록</title>
+
+  <!-- JS --> <!-- jQuery 를 포함합니다. -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/mystyles.css">
+
     <script>
-      $(document).ready(function(){
+      document.addEventListener('DOMContentLoaded', function() {
+        // 문서가 로드되면 실행할 코드
         // URL에서 문자열 추출
-        //const queryString = window.location.search;
+        const queryString = window.location.search;
         // 쿼리 문자열 파싱
-        //const params = new URLSearchParams(queryString);
+        const params = new URLSearchParams(queryString);
         // 변수의 값을 가져옴
-        //const genre = params.get('genre');
+        const genre = params.get('genre');
         //genre = '{{genre}}'
-        //alert(genre);
-      })
-
-      
+        alert(genre);
+    });
+    
     function open_chatroom(btn){
-      var parentTr = btn.closest('tr');
-
-      var img = parentTr.querySelector('td img').src;
-      var user2 = parentTr.querySelector('td:nth-child(3)').textContent; //user2가 첫 메세지 수신자 / user1은 채팅을 시작한 사람
-
+      var parentDiv = btn.closest('div');
+      var parentImg = btn.closest('.media');
+     
+      var img = parentImg.querySelector('figure img').src;
+      var user2 = parentDiv.querySelector('p:nth-child(1)').textContent; //user2가 첫 메세지 수신자 / user1은 채팅을 시작한 사람
+      //alert(user2)
       
         let token = localStorage.getItem("access_token");
+        //alert(token)
         if (!token) {
           window.location.href = '/';
         }
@@ -37,15 +44,11 @@
           headers: { "Authorization": "Bearer " + token },
           success: function (response) {
               // 사용자가 로그인 상태
-              id=response["logged_in_as"]
-              let user1 = id;
-              console.log(id)
+              //id = response["logged_in_as"]
+              let user1 = response["logged_in_as"];
+              //alert(user1)
 
-              $.ajax({
-                type: "POST",
-                url: "/moveroom",
-                data: {'img': img, 'user1': user1, 'user2': user2}
-              });
+              window.location.href = `/moveroom?img=${img}&user1=${user1}&user2=${user2}`;
           },
           error: function (xhr, status) {
               if (xhr.status === 401) {
@@ -55,136 +58,152 @@
               }
           }
         });
-      
-
     }
-    </script>
-  </head>
-  <body>
-    <nav class="navbar" role="navigation" aria-label="main navigation">
+    function logoutUser() {
+      localStorage.removeItem("access_token"); // 토큰 삭제
+      window.location.href = '/'; // 로그인 페이지로 리디렉트
+    }
+    function IntroOpenClose() {
+      if ($("#intro-box").hasClass("is-hidden")) {
+        $("#intro-box").removeClass("is-hidden");
+      } else {
+        $("#intro-box").addClass("is-hidden");
+      }
+    }
+    function logout() {
+            let token = localStorage.getItem("access_token");
+            $.ajax({
+                type: "GET",
+                url: "/logout",
+                headers: { "Authorization": "Bearer " + token },
+                success: function (response) {
+                    alert(response["msg"]);
+                    localStorage.removeItem("access_token"); // 로컬 저장소에서 토큰 삭제
+                    showLoginState();
+                }
+            })
+        }
+        function showLoginState() {
+            let token = localStorage.getItem("access_token");
+            if (!token) {
+                window.location.href = '/';
+            }
+            $.ajax({
+                type: "GET",
+                url: "/protected", // 보호된 라우트
+                headers: { "Authorization": "Bearer " + token },
+                success: function (response) {
+                    // 사용자가 로그인 상태
+                   
+                },
+                error: function (xhr, status) {
+                    if (xhr.status === 401) {
+                        // 토큰이 만료되었거나 유효하지 않음
+                        alert("로그인이 만료되었습니다.")
+                        logoutUser(); // 로그아웃 처리
+                    }
+                }
+            });
+        }
+        function logoutUser() {
+            localStorage.removeItem("access_token"); // 토큰 삭제
+            window.location.href = '/'; // 로그인 페이지로 리디렉트
+        }
+  </script>
+</head>
+
+<body>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="navbar-item">
-            <h1 class="title" onclick="location.href='main.html'">MakeMate</h1>
+      <a class="navbar-item">
+        <h1 class="title" onClick="location.href='main.html'">MakeMate</h1>
     </div>
 
     <div class="navbar-end">
-        <div class="navbar-item">
-            <a class="button is-light" onclick="location.href='login.html'">
-                로그아웃
-            </a>
+      <div class="navbar-item">
+        <a class="button is-light" onClick=logout()>
+          로그아웃
+        </a>
+      </div>
+    </div>
+  </nav>
+  <div class="container mt-6">
+    <h1 class="title">분야 이름</h1>
+  </div>
+  <div class="container mt-6">
+    <h3 class="subtitle is-3">내 소개글 작성</h3>
+    <form class="box" id="posting-box">
+      <div class="field">
+        <div class="control">
+          <input class="input" id="section_title" type="text" placeholder="내용" name="section_title">
         </div>
-    </div>
-    </nav>
-
-    <div class="container list">
-        <table class="table">
-            <thead>
-              <tr>
-                <th><abbr title="Position">순서</abbr></th>
-                <th><abbr title="Profile image">사진</abbr></th>
-                <th><abbr title="Name">이름</abbr></th>
-                <th><abbr title="Introduction">소개</abbr></th>
-                <th><abbr title="Go chatroom">채팅하기</abbr></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>1</th>
-                <td>
-                    <img src="https://bulma.io/images/placeholders/32x32.png">
-                </td>
-                <td>김정글<strong>(추천)</strong></td>
-                <td>자기소개 데모 텍스트</td>
-                <td><a onclick="location.href='/chatroom'" title="chatroom">채팅</a></td>
-              </tr>
-              <tr>
-                <th>2</th>
-                <td>
-                    <img src="https://bulma.io/images/placeholders/32x32.png">
-                </td>
-                <td>이정글</td>
-                <td>자기소개 데모 텍스트</td>
-                <td><a onclick="open_chatroom(this)" title="chatroom">채팅</a></td>
-              </tr>
-              <tr>
-                <th>3</th>
-                <td>
-                    <img src="https://bulma.io/images/placeholders/32x32.png">
-                </td>
-                <td>박정글</td>
-                <td>자기소개 데모 텍스트</td>
-                <td><a location.href='login.html' title="chatroom">채팅</a></td>
-              </tr>
-              <tr>
-                <th>4</th>
-                <td>
-                    <img src="https://bulma.io/images/placeholders/32x32.png">
-                </td>
-                <td>최정글</td>
-                <td>자기소개 데모 텍스트</td>
-                <td><a location.href='login.html' title="chatroom">채팅</a></td>
-              </tr>
-            </tbody>
-          </table>          
-    </div>
-
-    <div class="container comment">
-        <article class="media">
-            <figure class="media-left">
-              <p class="image is-64x64">
-                <img src="https://bulma.io/images/placeholders/128x128.png">
-              </p>
-            </figure>
-            <div class="media-content">
-              <div class="content">
-                <p>
-                  <strong>사용자 이름</strong>
-                  <br>
-                    해당 분야에 대한 댓글
-                  <br>
-                </p>
-              </div>              
+      </div>
+      <button class="button is-primary my-3" onClick="postSection()">작성하기</button>
+    </form>
+  </div>
+  <div class="container my-6">
+    <h3 class="subtitle is-3">정글러 목록</h3>
+    <div class="container">
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+              </figure>
             </div>
-        </article>
+            <div class="media-content">
+              <p class="title is-4">유저 이름</p>
+              <p class="subtitle is-6"><a onclick="open_chatroom(this)">이 정글러와 채팅하기</a></p>
+            </div>
+          </div>
 
-        <article class="media">
-            <figure class="media-left">
-              <p class="image is-64x64">
-                <img src="https://bulma.io/images/placeholders/128x128.png">
-              </p>
-            </figure>
-            <div class="media-content">
-              <div class="content">
-                <p>
-                  <strong>사용자 이름</strong>
-                  <br>
-                  해당 분야에 대한 댓글
-                  <br>  
-                </p>
-              </div>              
+          <div class="content">
+            자기소개를 자유롭게 남길 수 있습니다.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+              </figure>
             </div>
-        </article>
-          
-          <article class="media">
-            <figure class="media-left">
-              <p class="image is-64x64">
-                <img src="https://bulma.io/images/placeholders/128x128.png">
-              </p>
-            </figure>
             <div class="media-content">
-              <div class="field">
-                <p class="control">
-                  <textarea class="textarea" placeholder="내용"></textarea>
-                </p>
-              </div>
-              <div class="field">
-                <p class="control">
-                  <button class="button">댓글 작성</button>
-                </p>
-              </div>
+              <p class="title is-4">유저 이름</p>
+              <p class="subtitle is-6"><a onclick="open_chatroom(this)">이 정글러와 채팅하기</a></p>
             </div>
-          </article>
+          </div>
+
+          <div class="content">
+            자기소개를 자유롭게 남길 수 있습니다.
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-content">
+          <div class="media">
+            <div class="media-left">
+              <figure class="image is-48x48">
+                <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+              </figure>
+            </div>
+            <div class="media-content">
+              <p class="title is-4">유저 이름</p>
+              <p class="subtitle is-6"><a onclick="open_chatroom(this)">이 정글러와 채팅하기</a></p>
+            </div>
+          </div>
+
+          <div class="content">
+            자기소개를 자유롭게 남길 수 있습니다.
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-  </body>
+</body>
+
 </html>
