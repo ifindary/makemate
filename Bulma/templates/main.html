@@ -247,7 +247,9 @@
         function open_list(btn){
             var parent_div = btn.closest('div');
             parent_div = parent_div.parentNode;
-            let room_id = parent_div.attr('id');
+            //let room_id = parent_div.attr('id');
+            let room_id = parent_div.id;
+            alert(room_id);
             let text_p = parent_div.querySelector('p');
             //alert(text_p.textContent.trim())
             let genre = text_p.textContent.trim();

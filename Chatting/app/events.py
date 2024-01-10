@@ -3,6 +3,7 @@ from flask_socketio import emit, join_room, leave_room, Namespace
 
 import datetime
 import random
+import time
 
 from pymongo import MongoClient
 
@@ -18,9 +19,9 @@ db = room_client.save_chat #테이블 이름 - 컬렉션 상위
 def socketio_init(socketio):
     @socketio.on('joined', namespace='/chat')
     def joined(message):
-        user = session.get('name')
+        #user = session.get('name')
         
-        user_img = message['img']
+        #user_img = message['img']
         user1 = message['user1']
         genre = message['genre']
         room_id = message['room_id']
@@ -48,8 +49,17 @@ def socketio_init(socketio):
         }
         db.room_data.insert_one(data)
         
-        emit('status', {'msg':user1 + '님이 입장하셧습니다'}, room=room_id)
-          
+        msglist = list(db.room_msg.find({'room_id': room_id}, {}).sort('date', 1))
+        
+        for msg in msglist:
+            print(msg['text'])
+            emit('message', {'msg': msg['sender'] + ': ' + msg['text']}, room = room_id) 
+            time.sleep(0.1)  
+        #emit('oldchat', {'msgs': msglist}, room = room_id)
+        
+        emit('status', {'msg':user1 + '님이 입장하셨습니다'}, room=room_id)
+        
+        
     @socketio.on('text', namespace='/chat')
     def text(message):
         room = session.get('room_id')
@@ -66,12 +76,11 @@ def socketio_init(socketio):
         
         print(date, ': ', message['msg']) # -------------- 여기까지 됨
         
-        emit('message', {'msg' : sender + ':' + message['msg']}, room=room)
+        emit('message', {'msg' : sender + ': ' + message['msg']}, room=room)
         
     #@socketio.on('connect', namespace='/')
     #def connect_handler(data):
     #    print(data)
-        
         
     @socketio.on('left', namespace='/chat')
     def left(message):
