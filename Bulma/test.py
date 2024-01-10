@@ -43,9 +43,11 @@ def movemain():
 def moveindex():
     return render_template('index.html')
 
-@app.route('/list')
+@app.route('/list', methods=['GET'])
 def movelist():
-    return render_template('list.html')
+    genre = request.args.get('genre')
+    print(genre)
+    return render_template('list.html', genre=genre)
 
 @app.route('/chatroom')
 def movechatroom():
@@ -169,7 +171,7 @@ def post_sections():
 
     # title이 이미 존재하는지 확인
     if db.sections.find_one({'title': title_receive}):
-        return jsonify({'result': 'fail', 'msg': '이미 존재하는 분야입니다.'})
+        return jsonify({'result': 'fail', 'msg': '이미 존재하는 분야입니다.'}), 200
 
     # 파일명 안전하게 처리
     post_filename = secure_filename(image_receive.filename)
@@ -182,15 +184,14 @@ def post_sections():
 
     # mongoDB에 데이터를 넣기
     db.sections.insert_one(section)
+    return jsonify({'result':'success','msg': '추가 성공'}), 200
 
-    return jsonify({'result': 'success'})
-
-@app.route('/collect', methods=['GET'])
+@app.route('/collectread', methods=['GET'])
 def read_sections():
     # mongoDB에서 모든 데이터 조회해오기 (Read)
     result = list(db.sections.find({}, {'_id': 0}))
     # 2. articles라는 키 값으로 article 정보 보내주기
-    return jsonify({'result': 'success', 'sections': result})
+    return jsonify({'result': 'success', 'sections': result}), 200
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', port=5001, debug=True)
+    app.run('0.0.0.0', port=5000, debug=True)

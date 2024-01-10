@@ -66,8 +66,8 @@
                     $("#user_name_box").text(id + " 님 환영합니다.");
                     imageUrl = response["img_url"]; // 서버에서 받은 이미지 URL
                     // image-crop 클래스를 가진 요소의 배경 이미지 설정
-                    console.log(imageUrl)
-                    $('.image-crop').css('background-image', 'url('+ imageUrl + ')');
+                    //console.log(imageUrl)
+                    $('.image-crop').css('background-image', 'url(' + imageUrl + ')');
                     //static안해도 찾아감?
 
                 },
@@ -125,7 +125,7 @@
 
         function postSection() {
             //event.preventDefault();  // 폼의 기본 제출 동작 방지
-            var formData = new FormData($("#signup-form")[0]);
+            var formData = new FormData($("#posting-box")[0]);
 
             let image = $("#section_image").val().trim();
             let title = $("#section_title").val().trim();
@@ -163,8 +163,8 @@
                 contentType: false,  // 이렇게 해야 FormData가 올바르게 전송됨
                 success: function (response) { // 성공하면
                     if (response["result"] == "success") {
-                        alert("추가 성공!")
-                        window.location.reload();
+                        alert(response["msg"]);
+                        //window.location.href = '/main';
                     } else { // 실패하면
                         alert("다시 시도해주세요.")
                     }
@@ -179,16 +179,16 @@
 
             $.ajax({
                 type: "GET",
-                url: "/collect",
+                url: "/collectread",
                 data: {},
                 success: function (response) {
                     let sections = response["sections"];
-                    console.log(sections);
+                    //console.log(sections);
                     for (let i = 0; i < sections.length; i++) {
                         addCards(sections[i]["image"], sections[i]["title"]);
-                        console.log(sections[i]["image"]);
+                        //console.log(sections[i]["image"]);
                     }
-                    
+
                 }
             })
         }
@@ -210,7 +210,7 @@
             </div>`;
             $('#cards-box').append(temp_html);
         }
-        
+
         function showImagePreview(event) {
             var fileInput = event.target;
             var file = fileInput.files[0];
@@ -229,6 +229,19 @@
 
             // 파일 읽기
             reader.readAsDataURL(file);
+        }
+
+        function validateImageFile(fileInput) {
+            var file = fileInput.files[0];
+            var validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'];
+
+            if (file && validImageTypes.includes(file.type)) {
+                return true;
+            } else {
+                alert("유효한 이미지 파일을 업로드해주세요. (jpg, jpeg, png, gif)");
+                fileInput.value = ''; // 파일 입력 필드 초기화
+                return false;
+            }
         }
     </script>
     <style>
@@ -282,7 +295,7 @@
 
 
         <div class="columns is-centered">
-            <form method="post" action="/collect" class="box is-hidden" id="posting-box" enctype="multipart/form-data"
+            <form method="post" action="/collect" id="posting-box" class="box is-hidden" enctype="multipart/form-data"
                 onsubmit="return postSection()">
                 <div class="field">
                     <label class="label">분야 이름</label>
@@ -306,8 +319,9 @@
                     <p id="image-path"></p>
                     <img id="image-preview" src="" alt="Image Preview"
                         style="max-width: 200px; max-height: 200px; display: none;">
-                    <button class="button is-primary my-3" onClick="postSection()">추가하기</button>
             </form>
+            <button class="button is-primary my-3" type="button" onClick="postSection()">추가하기</button>
+
         </div>
     </div>
 
