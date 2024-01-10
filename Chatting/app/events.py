@@ -30,6 +30,7 @@ def socketio_init(socketio):
         while(True):
             room = random.randint(1000, 9999)
             
+            print(room, " 넘버가 생성되었씁니다.")
             result = db.room_data.find_one({'room_id': room})
             
             #result == 1이면 중복 / 0이면 중복된 값 없음

@@ -15,7 +15,7 @@
         $(document).ready(function(){
             socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
             socket.on('connect', function(){
-                socket.emit('joined', { 'user1': {{ user1 }}, 'user2': {{ user2 }} });
+                socket.emit('joined', { 'user1': '{{ user1 }}', 'user2': '{{ user2 }}' });
             });
             // 입장했을 때, 채팅방에 있는 모든 사용자에게 발송되는 메세지
             socket.on('status', function(data){
@@ -58,7 +58,7 @@
             socket.emit('left', {}, function() {
                 socket.disconnect();
 
-                window.location.href = "{{ url_for('main.index') }}";
+                window.location.href = `http://localhost:5000/main`;
             });
         }
     </script>
