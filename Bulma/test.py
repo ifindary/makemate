@@ -212,7 +212,7 @@ def post_lists():
     # 이미 존재하는지 확인
     if db.lists.find_one({'id': current_user, 'genre': genre_receive}):
         return jsonify({'result': 'fail', 'msg': '이미 해당 분야에서 소개글을 작성하였습니다.'})
-    list_data = {'id': current_user, 'img_url' : member['image_path'], 'genre': genre_receive, 'intro': intro_receive}
+    list_data = {'id': current_user, 'name': member['name'], 'img_url' : member['image_path'], 'genre': genre_receive, 'intro': intro_receive}
 
     # mongoDB에 데이터를 넣기
     db.lists.insert_one(list_data)
@@ -225,6 +225,7 @@ def read_lists():
 
     # mongoDB에서 조건에 맞는 데이터 조회해오기 (Read)
     result = list(db.lists.find({'genre': genre_receive}, {'_id': 0}))
+
     # 2. articles라는 키 값으로 article 정보 보내주기
     return jsonify({'result': 'success', 'lists': result})
 
