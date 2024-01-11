@@ -256,7 +256,7 @@
       /* 이미지 크기를 div에 맞추되, 비율 유지 */
       overflow: hidden;
       /* div 크기를 넘어가는 부분 숨김 */
-      margin: 10px;
+      /* margin: 10px; */
     }
 
     .image-crop1 {
@@ -281,6 +281,7 @@
     <div class="navbar-brand">
       <a class="navbar-item">
         <h1 class="title" onClick="goMain()">MakeMate</h1>
+      </a>
     </div>
 
     <div class="navbar-end">
@@ -301,12 +302,13 @@
         <div class="media">
           <div class="media-left">
             <figure class="image is-48x48">
-              <div class="image-crop"></div>
+              <div class="image-crop4"></div>
             </figure>
           </div>
-          <div class="media-content">
+          <div class="media-content" style="margin-left: 30px; padding-bottom: 20px; padding-top: 10px; align-items: center;">
             <p class="title is-4">{{ genre }}</p>
-            <p class="subtitle is-6"><a onclick="open_chatroom(this)">다 같이 채팅하기</a><span class="tag is-success mb-1 ml-1">추천</span></p>
+            <p class="subtitle is-6"><a onclick="open_chatroom(this)">다 같이 채팅하기</a><span
+                class="tag is-success mb-1 ml-1">추천</span></p>
           </div>
         </div>
       </div>
