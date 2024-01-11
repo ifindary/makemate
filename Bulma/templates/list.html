@@ -39,12 +39,6 @@
 
     function open_chatroom(btn) {
       var parentDiv = btn.closest('div');
-      var parentImg = btn.closest('.media');
-
-      var img = parentImg.querySelector('figure img').src;
-      var user2 = parentDiv.querySelector('p:nth-child(1)').textContent; //user2가 첫 메세지 수신자 / user1은 채팅을 시작한 사람
-      //alert(user2)
-
       let token = localStorage.getItem("access_token");
       //alert(token)
       if (!token) {
@@ -58,8 +52,7 @@
           // 사용자가 로그인 상태
           let user1 = response["logged_in_as"];
           //alert(user1)
-
-          window.location.href = `/moveroom?img=${img}&user1=${user1}&user2=${user2}`;
+          window.location.href = `http://localhost:5005/moveroom?&user1=${user1}&genre=${list_genre}&room_id=${room_Id}}`;
         },
         error: function (xhr, status) {
           if (xhr.status === 401) {
